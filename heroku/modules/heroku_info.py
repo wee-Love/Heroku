@@ -306,7 +306,7 @@ class HerokuInfoMod(loader.Module):
 
                 await utils.answer(
                     message,
-                    ""
+                    "",
                     file = self._get_info_photo(start),
                     reply_to=getattr(message, "reply_to_msg_id", None),
                 )
