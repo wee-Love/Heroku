@@ -133,8 +133,6 @@ heroku_settings:
   nothing: "<emoji document_id=5427052514094619126>🤷‍♀️</emoji> <b>Nichts zu zeigen...</b>"
   btn_yes: "🚸 Trotzdem öffnen"
   btn_no: "🔻 Schließen"
-  disable_debugger: "✅ Debugger aktiviert"
-  enable_debugger: "🚫 Debugger deaktiviert"
   _cmd_doc_nonickchat: "Aktiviere NoNick für einen bestimmten Chat"
   _cmd_doc_nonickchats: "Zeigt die Liste der aktiven NoNick-Chats an"
   _cmd_doc_nonickcmd: "<Befehl> - Aktiviere NoNick für einen bestimmten Befehl"
@@ -429,13 +427,9 @@ api_protection:
   _cfg_forbidden_methods: "Verhindere die Ausführung der angegebenen Methoden in allen externen Modulen"
   btn_no: "🚫 Nein"
   btn_yes: "✅ Ja"
-  web_pin: "🔓 <b>Drücke den Button unten, um den Werkzeug-Fehlerbehebungs-PIN anzuzeigen. Gib ihn niemandem weiter.</b>"
-  web_pin_btn: "🐞 Zeige Werkzeug-PIN"
   proxied_url: "🌐 Proxy-Link"
   local_url: "🏠 Lokaler Link"
-  debugger_disabled: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Debugger deaktiviert, Link nicht verfügbar</b>"
   _cmd_doc_api_fw_protection: "Aktivieren/Deaktivieren des API-Schutzes"
-  _cmd_doc_debugger: "Zeigt den Werkzeug-PIN an"
   _cmd_doc_suspend_api_protect: "<Zeit in Sekunden> - Friert den API-Schutz für N Sekunden ein"
 
 help:

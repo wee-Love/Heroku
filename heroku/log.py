@@ -35,18 +35,11 @@ from herokutl.errors.rpcbaseerrors import (
 from . import utils
 from .tl_cache import CustomTelegramClient
 from .types import BotInlineCall, Module, CoreOverwriteError
-from .web.debugger import WebDebugger
 
 INTERNET_ERRORS = (
     TelegramNetworkError, asyncio.exceptions.TimeoutError,
     ServerError, PersistentTimestampOutdatedError
 )
-
-# Monkeypatch linecache to make interactive line debugger available
-# in werkzeug web debugger
-# This is weird, but the only adequate approach
-# https://github.com/pallets/werkzeug/blob/3115aa6a6276939f5fd6efa46282e0256ff21f1a/src/werkzeug/debug/tbtools.py#L382-L416
-
 old = linecache.getlines
 
 
@@ -253,7 +246,6 @@ class TelegramLogsHandler(logging.Handler):
         self.force_send_all = False
         self.tg_level = 20
         self.ignore_common = False
-        self.web_debugger = None
         self.targets = targets
         self.capacity = capacity
         self.lvl = logging.NOTSET
@@ -264,9 +256,6 @@ class TelegramLogsHandler(logging.Handler):
             self._task.cancel()
 
         self._mods[mod.tg_id] = mod
-
-        if mod.db.get(__name__, "debugger", False):
-            self.web_debugger = WebDebugger()
 
         self._task = asyncio.ensure_future(self.queue_poller())
 
@@ -314,58 +303,6 @@ class TelegramLogsHandler(logging.Handler):
         for chunk in chunks[1:]:
             await bot.send_message(chat_id=call.chat_id, text=chunk)
 
-    def _gen_web_debug_button(self, item: HerokuException) -> list:
-        if not item.sysinfo:
-            return []
-
-        if not (url := item.debug_url):
-            try:
-                url = self.web_debugger.feed(*item.sysinfo)
-            except Exception:
-                url = None
-
-            item.debug_url = url
-
-        return [
-            (
-                {
-                    "text": "🐞 Web debugger",
-                    "url": url,
-                }
-                if self.web_debugger
-                else {
-                    "text": "🪲 Start debugger",
-                    "callback": self._start_debugger,
-                    "args": (item,),
-                }
-            )
-        ]
-
-    async def _start_debugger(
-        self,
-        call: "InlineCall",  # type: ignore  # noqa: F821
-        item: HerokuException,
-    ):
-        if not self.web_debugger:
-            self.web_debugger = WebDebugger()
-            await self.web_debugger.proxy_ready.wait()
-
-        url = self.web_debugger.feed(*item.sysinfo)
-        item.debug_url = url
-
-        await call.edit(
-            item.message,
-            reply_markup=self._gen_web_debug_button(item),
-        )
-
-        self.inline.bot(await call.answer(
-            (
-                "Web debugger started. You can get PIN using .debugger command. \n⚠️"
-                " !DO NOT GIVE IT TO ANYONE! ⚠️"
-            ),
-            show_alert=True,
-        ))
-
     def get_logid_by_client(self, client_id: int) -> int:
         return self._mods[client_id].logchat
 
@@ -408,7 +345,6 @@ class TelegramLogsHandler(logging.Handler):
                                     ),
                                     "disable_security": True,
                                 },
-                                *self._gen_web_debug_button(item[0]),
                             ],
                         ),
                     )

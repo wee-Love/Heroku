@@ -14,11 +14,13 @@ import asyncio
 import logging
 import re
 import os
+import random
 
 from herokutl.errors.rpcerrorlist import YouBlockedUserError
 from herokutl.tl.functions.contacts import UnblockRequest
 
 from .. import utils
+from .. import main
 from .._internal import fw_protect
 from .types import InlineUnit
 
@@ -53,13 +55,15 @@ class TokenObtainment(InlineUnit):
                     pass
                 else:
                     uid = utils.rand(6)
-                    username = f"@heroku_{uid}_bot"
+                    genran = "".join(random.choice(main.LATIN_MOCK))
+                    username = f"@{genran}_{uid}_bot"
             else:
                 uid = utils.rand(6)
-                username = f"@heroku_{uid}_bot"
+                genran = "".join(random.choice(main.LATIN_MOCK))
+                username = f"@{genran}_{uid}_bot"
 
             for msg in [
-                f"🪐 Heroku userbot"[:64],
+                f"🪐 Heroku {utils.get_version_raw}"[:64],
                 username,
                 "/setuserpic",
                 username,

@@ -121,7 +121,8 @@ LATIN_MOCK = [
     "Tigris", "Trans", "Tribuo", "Tristis", "Ultimus",
     "Unitas", "Universus", "Uterque", "Valde", "Vates",
     "Veritas", "Verus", "Vester", "Via", "Victoria",
-    "Vita", "Vox", "Vultus", "Zephyrus"
+    "Vita", "Vox", "Vultus", "Zephyrus", "Hewoku", "Bimbalas", "Nywuctuu",
+    "Sodrago", "Anyone"
 ]
 # fmt: on
 
