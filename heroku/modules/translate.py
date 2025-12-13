@@ -65,13 +65,13 @@ class Translator(loader.Module):
             if self.config["only_text"]:
                 await utils.answer(
                     message,
-                    self.strings["translated_text"].format(tr_text = tr_text)
+                    tr_text,
                 )
 
             else:
                 await utils.answer(
                     message,
-                    tr_text,
+                    self.strings["translated_text"].format(tr_text = tr_text)
                 )
 
         except Exception:
