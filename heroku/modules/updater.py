@@ -694,7 +694,7 @@ class UpdaterMod(loader.Module):
         await self.restart_common(call)
 
     @loader.command()
-    async def stop(self, message: Message):
+    async def ubstop(self, message: Message):
         """| stops your userbot"""
 
         if "LAVHOST" in os.environ:
