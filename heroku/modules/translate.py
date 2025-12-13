@@ -30,7 +30,7 @@ class Translator(loader.Module):
             loader.ConfigValue(
                 "only_text",
                 False,
-                "only translated text in .tr"
+                "only translated text in .tr",
                 validator=loader.validators.Boolean(),
             ))
 
