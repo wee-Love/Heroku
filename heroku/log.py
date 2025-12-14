@@ -189,7 +189,7 @@ class HerokuException:
             message=override_text(exc_value)
             or (
                 "{}<b>🎯 Source:</b> <pre><code class=\"language-python\">{}:{}</code></pre><b> in"
-                " </b><code">{}"</code>\n<b>❓ Error:</b> <pre><code class=\"language-python\">{}</code></pre>{}"
+                " </b><code>"{}"</code>\n<b>❓ Error:</b> <pre><code class=\"language-python\">{}</code></pre>{}"
             ).format(
                 (
                     (
