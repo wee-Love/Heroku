@@ -906,7 +906,7 @@ class Heroku:
                         build[:7],
                         upd,
                         web_url,
-                        self.get_prefix(),
+                        c.heroku_db.get("heroku.main", "command_prefix"),
                     )
                 ),
             )
