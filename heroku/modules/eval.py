@@ -16,6 +16,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
 import typing
 from types import ModuleType
 
@@ -157,6 +158,7 @@ class Evaluator(loader.Module):
     @loader.command(alias="eval")
     async def e(self, message: Message):
         try:
+            start_time = time.time()
             output_print = StringIO()
             with contextlib.redirect_stdout(output_print):
                 result = await meval(
@@ -192,6 +194,8 @@ class Evaluator(loader.Module):
         if callable(getattr(result, "stringify", None)):
             with contextlib.suppress(Exception):
                 result = str(result.stringify())
+        
+        exec_time = time.time() - start_time
 
         with contextlib.suppress(MessageIdInvalidError):
             await utils.answer(
@@ -208,7 +212,8 @@ class Evaluator(loader.Module):
                     "python",
                     print_output,
                     utils.escape_html(self.censor(print_output))
-                    ) if print_output else ""),
+                    ) if print_output else ""
+                ) + (f"<blockquote><b>{exec_time:.2f}s.</b></blockquote>")
             )
 
     @loader.command()

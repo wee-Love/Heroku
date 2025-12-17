@@ -33,6 +33,7 @@ import contextlib
 import logging
 import os
 import re
+import time
 import typing
 import signal
 
@@ -92,6 +93,7 @@ class MessageEditor:
         self.config = config
         self.strings = strings
         self.request_message = request_message
+        self.start_time = time.time()
 
     async def update_stdout(self, stdout):
         self.stdout = stdout
@@ -112,6 +114,10 @@ class MessageEditor:
         stderr = utils.escape_html(self.stderr[max(len(self.stderr) - 1024, 0) :])
         text += (self.strings("stderr") + stderr) if stderr else ""
         text += self.strings("end")
+
+        if self.rc is not None:
+            exec_time = self.start_time - time.time()
+            text += (f"<blockquote><b>{exec_time:.2f}s.</b></blockquote>")
 
         with contextlib.suppress(herokutl.errors.rpcerrorlist.MessageNotModifiedError):
             try:
