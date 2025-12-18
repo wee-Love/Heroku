@@ -213,7 +213,7 @@ class Evaluator(loader.Module):
                     print_output,
                     utils.escape_html(self.censor(print_output))
                     ) if print_output else ""
-                ) + (f"<blockquote><b>{exec_time:.2f}s.</b></blockquote>")
+                ) + (self.strings["time_exec"].format(exec_time:.2f))
             )
 
     @loader.command()

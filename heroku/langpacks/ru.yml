@@ -164,6 +164,7 @@ terminal:
   stdout: "\n<b>📼 Stdout:</b>\n<pre><code class=\"language-stdout\">"
   stderr: "</code></pre>\n\n<b><emoji document_id=5210952531676504517>🚫</emoji> Stderr:</b>\n<pre><code class=\"language-stderr\">"
   end: "</code></pre>"
+  time_exec: "<emoji document_id=5134202243486057363>💫</emoji> Время выполнения: {}s"
   auth_fail: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Аутентификация неуспешна, попробуй еще раз</b>"
   auth_needed: '<emoji document_id=5472308992514464048>🔐</emoji><a href="tg://user?id={}"> Необходима аутентификация</a>'
   auth_msg: "<emoji document_id=5472308992514464048>🔐</emoji> <b>Пожалуйста, отредактируй это сообщение с паролем от рута для</b> <code>{}</code> <b>, чтобы выполнить</b> <code>{}</code>"
@@ -574,6 +575,7 @@ eval:
   eval_py: "<emoji document_id={}>💻</emoji><b> Код:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
   _cls_doc: "Выполняет код на различных языках программирования"
   compiling: "<emoji document_id=5325787248363314644>🫥</emoji> <b>Компиляция кода...</b>"
+  time_exec: "<emoji document_id=5134202243486057363>💫</emoji> Время выполнения: {}s"
   no_compiler: "<emoji document_id={}>💻</emoji> <b>Компилятор {} не установлен на системе.</b>"
   eval_result: "\n\n<emoji document_id=5197688912457245639>✅</emoji><b> Результат:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
   print_outp: "\n\n<emoji document_id=5118861066981344121>✅</emoji><b> Вывод print():</b>\n<pre><code class=\"language-{}\">{}</code></pre>"

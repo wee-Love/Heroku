@@ -17,7 +17,7 @@
 - add config to internet error ignore
 - added hsearch!!
 - updated heroku-tl to 2.0.0
-- 
+- added time execution to eval and terminal
 
 ## 🪐 Heroku 1.7.2
 - added autoupdate

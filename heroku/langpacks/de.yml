@@ -164,6 +164,7 @@ terminal:
   stdout: "\n<b>📼 Stdout:</b>\n<pre><code class=\"language-stdout\">"
   stderr: "</code></pre>\n\n<b><emoji document_id=5210952531676504517>🚫</emoji> Stderr:</b>\n<pre><code class=\"language-stderr\">"
   end: "</code></pre>"
+  time_exec: "<emoji document_id=5134202243486057363>💫</emoji> Ausführungszeit: {}s"
   auth_fail: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Authentifizierung fehlgeschlagen, bitte erneut versuchen</b>"
   auth_needed: '<emoji document_id=5472308992514464048>🔐</emoji><a href="tg://user?id={}"> Authentifizierung erforderlich</a>'
   auth_msg: "<emoji document_id=5472308992514464048>🔐</emoji> <b>Bitte bearbeiten Sie diese Nachricht mit dem Root-Passwort für</b> <code>{}</code> <b>, um</b> <code>{}</code> <b>auszuführen</b>"
@@ -578,6 +579,7 @@ eval:
   err: "<emoji document_id={}>💻</emoji><b> Code:</b>\n<pre><code class=\"language-{}\">{}</code></pre>\n\n<emoji document_id=5210952531676504517>🚫</emoji> <b>Fehler:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
   _cls_doc: "Führt Code in verschiedenen Programmiersprachen aus"
   compiling: "<emoji document_id=5325787248363314644>🫥</emoji> <b>Code wird kompiliert...</b>"
+  time_exec: "<emoji document_id=5134202243486057363>💫</emoji> Ausführungszeit: {}s"
   no_compiler: "<emoji document_id={}>💻</emoji> <b>Compiler {} ist auf dem System nicht installiert.</b>"
   eval_result: "\n\n<emoji document_id=5197688912457245639>✅</emoji><b> Ergebnis:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"
   print_outp: "\n\n<emoji document_id=5118861066981344121>✅</emoji><b> Ergebnis drucken:</b>\n<pre><code class=\"language-{}\">{}</code></pre>"

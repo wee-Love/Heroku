@@ -116,8 +116,8 @@ class MessageEditor:
         text += self.strings("end")
 
         if self.rc is not None:
-            exec_time = self.start_time - time.time()
-            text += (f"<blockquote><b>{exec_time:.2f}s.</b></blockquote>")
+            exec_time = time.time() - self.start_time
+            text += (self.strings["time_exec"].format(exec_time:.2f))
 
         with contextlib.suppress(herokutl.errors.rpcerrorlist.MessageNotModifiedError):
             try:
