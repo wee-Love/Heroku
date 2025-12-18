@@ -213,7 +213,7 @@ class Evaluator(loader.Module):
                     print_output,
                     utils.escape_html(self.censor(print_output))
                     ) if print_output else ""
-                ) + (self.strings["time_exec"].format(exec_time:.2f))
+                ) + (self.strings["time_exec"].format(round(exec_time, 2)))
             )
 
     @loader.command()
