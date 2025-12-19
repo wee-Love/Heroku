@@ -419,17 +419,16 @@ class UpdaterMod(loader.Module):
             if "LAVHOST" in os.environ:
                 msg_obj = await utils.answer(
                     msg_obj,
-                    self.strings("lavhost_update").format(
-                        "</b><emoji document_id=5192756799647785066>✌️</emoji><emoji"
-                        " document_id=5193117564015747203>✌️</emoji><emoji"
-                        " document_id=5195050806105087456>✌️</emoji><emoji"
-                        " document_id=5195457642587233944>✌️</emoji><b>"
+                    self.strings("restarting_caption").format(
+                        utils.get_platform_emoji()
                         if self._client.heroku_me.premium
                         and CUSTOM_EMOJIS
                         and isinstance(msg_obj, Message)
-                        else "lavHost"
+                        else "Heroku"
                     ),
                 )
+                await self.process_restart_message(msg_obj)
+                self.set("restart_ts", time.time())
                 await self.client.send_message("lavhostbot", "/update")
                 return
 
