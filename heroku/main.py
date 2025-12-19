@@ -872,6 +872,7 @@ class Heroku:
             build = utils.get_git_hash()
             diff = repo.git.log([f"HEAD..origin/{version.branch}", "--oneline"])
             upd = "Update required" if diff else "Up-to-date"
+            pref = client.heroku_db.get("heroku.main", "command_prefix", None)
 
             logo = (
                 "                          _           \n"
@@ -911,7 +912,7 @@ class Heroku:
                         build[:7],
                         upd,
                         web_url,
-                        client.heroku_db.get("heroku.main", "command_prefix"),
+                        pref if pref else ".",
                     )
                 ),
             )
