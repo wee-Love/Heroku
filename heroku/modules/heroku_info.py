@@ -332,7 +332,7 @@ class HerokuInfoMod(loader.Module):
             await utils.answer(
                 message,
                 self.strings["no_banner"].format(
-                    self.config["banner_url"], # ❌ <b>Я не могу найти баннер по ссылке {link}</b>
+                    link = self.config["banner_url"], 
                 ),
                 reply_to=getattr(message, "reply_to_msg_id", None),
             )
