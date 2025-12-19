@@ -393,7 +393,6 @@ updater:
   no_update: "🚸 <b>Du hast bereits die neueste Version. Möchtest du trotzdem ein Update erzwingen?</b>"
   cancel: "🚫 Abbrechen"
   _cls_doc: "Aktualisiert den Userbot"
-  lavhost_update: "<emoji document_id=5208661316947955396>✌️</emoji> <b>Dein {} wird aktualisiert...</b>"
   invalid_args: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Sie müssen die Anzahl der Commits angeben, die zurückgesetzt werden sollen!</b>"
   rollback_too_far: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Du rollst zu weit zurück!</b>"
   rollback_confirm: "❓ <b>Sind Sie sicher, dass Sie {num} Commit(s) zurücksetzen möchten?</b>"

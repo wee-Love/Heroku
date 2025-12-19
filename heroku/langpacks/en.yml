@@ -420,7 +420,6 @@ updater:
   update_confirm: "❓ <b>Are you sure you want to update?\n\n<a href=\"https://github.com/coddrago/Heroku/commit/{}\">{}</a> ⤑ <a href=\"https://github.com/coddrago/Heroku/commit/{}\">{}</a></b>"
   no_update: "🚸 <b>You are on the latest version, pull updates anyway?</b>"
   cancel: "🚫 Cancel"
-  lavhost_update: "<emoji document_id=5469986291380657759>✌️</emoji> <b>Your {} is updating...</b>"
   full_success: "<emoji document_id=6028215594707324419>👍</emoji> <b>Userbot is fully loaded! {}</b>\n<i>Full restart took {}s</i>"
   ub_stop: "Your {emoji} has been stopped"
   secure_boot_complete: "<emoji document_id=5472308992514464048>🔐</emoji> <b>Secure boot completed! {}</b>\n<i>Restart took {}s</i>"
