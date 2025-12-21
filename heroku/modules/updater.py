@@ -513,8 +513,6 @@ class UpdaterMod(loader.Module):
     async def _add_folder(self):
         folders = await self._client(GetDialogFiltersRequest())
 
-
-
         try:
             folder_id = (
                 max(
@@ -526,9 +524,23 @@ class UpdaterMod(loader.Module):
         except ValueError:
             folder_id = 2
         
-        if any(getattr(folder, "title", None) == "Heroku" for folder in folders.filters):
-            return
+        folders = await self._client(GetDialogFiltersRequest())
+        filters = getattr(folders, 'filters', folders)
+        heroku_f = False
+
+        if filters:
+
+            for folder in filters:
+                title = getattr(folder, "title", None)
         
+                if title:
+                    raw_title = getattr(title, "text", title)
+                    
+                    if str(raw_title).strip() == "Heroku":
+                        heroku_f = True
+
+        if heroku_f is True:
+            return
         else:
             try:
                 await self._client(
@@ -555,21 +567,8 @@ class UpdaterMod(loader.Module):
                                     None,
                                     ignore_migrated=True,
                                 )
-                                if dialog.name
-                                in {
-                                    "heroku-logs",
-                                    "heroku-onload",
-                                    "heroku-assets",
-                                    "heroku-backups",
-                                    "heroku-acc-switcher",
-                                    "silent-tags",
-                                }
+                                if "heroku" in dialog.name or "Heroku" in dialog.name
                                 and dialog.is_channel
-                                and (
-                                    dialog.entity.participants_count == 1
-                                    or dialog.entity.participants_count == 2
-                                    and dialog.name in {"heroku-logs", "silent-tags"}
-                                )
                                 or (
                                     self._client.loader.inline.init_complete
                                     and dialog.entity.id
