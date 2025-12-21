@@ -513,8 +513,7 @@ class UpdaterMod(loader.Module):
     async def _add_folder(self):
         folders = await self._client(GetDialogFiltersRequest())
 
-        if any(getattr(folder, "title", None) == "Heroku" for folder in folders.filters):
-            return
+
 
         try:
             folder_id = (
@@ -526,72 +525,76 @@ class UpdaterMod(loader.Module):
             )
         except ValueError:
             folder_id = 2
-
-        try:
-            await self._client(
-                UpdateDialogFilterRequest(
-                    folder_id,
-                    DialogFilter(
+        
+        if any(getattr(folder, "title", None) == "Heroku" for folder in folders.filters):
+            return
+        
+        else:
+            try:
+                await self._client(
+                    UpdateDialogFilterRequest(
                         folder_id,
-                        title=TextWithEntities(
-                            text='Heroku',
-                            entities=[]
-                        ),
-                        pinned_peers=(
-                            [
-                                await self._client.get_input_entity(
-                                    self._client.loader.inline.bot_id
+                        DialogFilter(
+                            folder_id,
+                            title=TextWithEntities(
+                                text='Heroku',
+                                entities=[]
+                            ),
+                            pinned_peers=(
+                                [
+                                    await self._client.get_input_entity(
+                                        self._client.loader.inline.bot_id
+                                    )
+                                ]
+                                if self._client.loader.inline.init_complete
+                                else []
+                            ),
+                            include_peers=[
+                                await self._client.get_input_entity(dialog.entity)
+                                async for dialog in self._client.iter_dialogs(
+                                    None,
+                                    ignore_migrated=True,
                                 )
-                            ]
-                            if self._client.loader.inline.init_complete
-                            else []
+                                if dialog.name
+                                in {
+                                    "heroku-logs",
+                                    "heroku-onload",
+                                    "heroku-assets",
+                                    "heroku-backups",
+                                    "heroku-acc-switcher",
+                                    "silent-tags",
+                                }
+                                and dialog.is_channel
+                                and (
+                                    dialog.entity.participants_count == 1
+                                    or dialog.entity.participants_count == 2
+                                    and dialog.name in {"heroku-logs", "silent-tags"}
+                                )
+                                or (
+                                    self._client.loader.inline.init_complete
+                                    and dialog.entity.id
+                                    == self._client.loader.inline.bot_id
+                                )
+                                or dialog.entity.id
+                                in [
+                                    2445389036,
+                                    2341345589,
+                                    2410964167,
+                                ]  # official heroku chats
+                            ],
+                            emoticon="🐱",
+                            exclude_peers=[],
+                            contacts=False,
+                            non_contacts=False,
+                            groups=False,
+                            broadcasts=False,
+                            bots=False,
+                            exclude_muted=False,
+                            exclude_read=False,
+                            exclude_archived=False,
                         ),
-                        include_peers=[
-                            await self._client.get_input_entity(dialog.entity)
-                            async for dialog in self._client.iter_dialogs(
-                                None,
-                                ignore_migrated=True,
-                            )
-                            if dialog.name
-                            in {
-                                "heroku-logs",
-                                "heroku-onload",
-                                "heroku-assets",
-                                "heroku-backups",
-                                "heroku-acc-switcher",
-                                "silent-tags",
-                            }
-                            and dialog.is_channel
-                            and (
-                                dialog.entity.participants_count == 1
-                                or dialog.entity.participants_count == 2
-                                and dialog.name in {"heroku-logs", "silent-tags"}
-                            )
-                            or (
-                                self._client.loader.inline.init_complete
-                                and dialog.entity.id
-                                == self._client.loader.inline.bot_id
-                            )
-                            or dialog.entity.id
-                            in [
-                                2445389036,
-                                2341345589,
-                                2410964167,
-                            ]  # official heroku chats
-                        ],
-                        emoticon="🐱",
-                        exclude_peers=[],
-                        contacts=False,
-                        non_contacts=False,
-                        groups=False,
-                        broadcasts=False,
-                        bots=False,
-                        exclude_muted=False,
-                        exclude_read=False,
-                        exclude_archived=False,
-                    ),
+                    )
                 )
-            )
         except Exception:
             logger.critical(
                 "Can't create Heroku folder. Possible reasons are:\n"
