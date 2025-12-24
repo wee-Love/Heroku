@@ -193,17 +193,17 @@ class HerokuInfoMod(loader.Module):
                     else ""
                 ),
                 me = me,
-                version = version,
+                version = _version,
                 prefix = prefix,
-                uptime = uptime, 
-                branch = branch,
-                cpu_usage = cpu_usage,
-                ram_usage = ram_usage,
-                ping = ping, 
+                uptime = utils.formatted_uptime(),
+                branch = version.branch,
+                cpu_usage=utils.get_cpu_usage(),
+                ram_usage=f"{utils.get_ram_usage()} MB",
+                ping = round((time.perf_counter_ns() - start) / 10**6, 3), 
                 upd = upd,
                 platform = platform,
-                os = os,
-                python_ver = python_ver
+                os=self._get_os_name() or self.strings('non_detectable'),
+                python_ver = lib_platform.python_version(),
             )
         )
     
