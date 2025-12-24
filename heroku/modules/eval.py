@@ -484,8 +484,6 @@ class Evaluator(loader.Module):
             "client": self._client,
             "reply": reply,
             "r": reply,
-            **self.get_sub(herokutl.tl.types),
-            **self.get_sub(herokutl.tl.functions),
             "event": message,
             "chat": message.to_id,
             "herokutl": herokutl,
@@ -499,8 +497,8 @@ class Evaluator(loader.Module):
             "lookup": self.lookup,
             "self": self,
             "db": self.db,
-            **self.get_sub(herokutl.tl.types),
             **self.get_sub(herokutl.tl.functions),
+            **self.get_sub(herokutl.tl.types),
         }
 
     def get_sub(self, obj: typing.Any, _depth: int = 1) -> dict:
