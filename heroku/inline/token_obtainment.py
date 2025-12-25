@@ -60,11 +60,13 @@ class TokenObtainment(InlineUnit):
         async with session.post(base_url + f"/api?hash=-", headers=headers, data={"_auth": params, "method": "auth"}) as resp:
             if resp.status != 200:
                 logger.error("Error while getting Cookies to enter botfather webapp: resp%s", resp.status)
+                await session.close()
                 raise RuntimeError("Getting Cookies failed")
         
         async with session.get(base_url, headers=headers) as resp:
             if resp.status != 200:
                 logger.error("Error while getting hash: resp%s", resp.status)
+                await session.close()
                 return False
             text = await resp.text()
             _hash = re.search(HASH_PATTERN, text)
@@ -72,6 +74,7 @@ class TokenObtainment(InlineUnit):
                 _hash = _hash.group(1)
             else:
                 logger.error("Unexpected error while getting token")
+                await session.close()
                 return False
 
         return (session, _hash)
@@ -330,7 +333,7 @@ class TokenObtainment(InlineUnit):
         self._db.set("heroku.inline", "bot_token", None)
         self._token = None
         if already_initialised:
-            asyncio.ensure_future(self._reassert_token(session, url, _hash))
+            asyncio.ensure_future(self.reassert_token())
         else:
             return await self._reassert_token(session, url, _hash)
         
