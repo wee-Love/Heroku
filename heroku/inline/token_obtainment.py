@@ -65,7 +65,7 @@ class TokenObtainment(InlineUnit):
         async with session.get(base_url, headers=headers) as resp:
             if resp.status != 200:
                 logger.error("Error while getting hash: resp%s", resp.status)
-                return RuntimeError("Getting api hash failed")
+                return False
             text = await resp.text()
             _hash = re.search(HASH_PATTERN, text)
             if _hash:
