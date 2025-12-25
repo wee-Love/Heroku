@@ -195,7 +195,7 @@ class TokenObtainment(InlineUnit):
                     raise RuntimeError("Upload failed")
                 content = await resp.json()
                 photo_id = content["media"]["photo_id"]
-        except RuntimeError:
+        except (RuntimeError, KeyError):
             photo_id = ""
         
         data = {
@@ -247,7 +247,7 @@ class TokenObtainment(InlineUnit):
         if username:
             ids = re.search(BOT_ID_PATTERN.format(username), content)
             
-        if not ids:
+        else:
             ids = re.search(BOT_BASE_PATTERN, content)
             
         if ids:
