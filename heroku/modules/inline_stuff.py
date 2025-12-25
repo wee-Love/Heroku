@@ -96,6 +96,9 @@ class InlineStuff(loader.Module):
                 uid = utils.rand(7)
                 genran = "".join(random.choice(main.LATIN_MOCK))
                 args = f"{genran}_{uid}_bot"
+            except Exception as e:
+                await utils.answer(message, self.strings("bot_username_invalid"))
+                return
 
         if (
             not args.lower().endswith("bot")
