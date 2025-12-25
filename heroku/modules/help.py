@@ -268,11 +268,13 @@ class Help(loader.Module):
         if "-c" in args:
             args = args.replace(" -c", "").replace("-c", "")
             only_core = True
+            force = True
 
         only_loaded = False
         if "-l" in args:
             args = args.replace(" -l", "").replace("-l", "")
             only_loaded = True
+            force = True
 
         if args:
             await self.modhelp(message, args)
