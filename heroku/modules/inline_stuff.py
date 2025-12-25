@@ -91,14 +91,10 @@ class InlineStuff(loader.Module):
         args = utils.get_args_raw(message).strip("@")
 
         if not args:
-            try:
-                from .. import main
-                uid = utils.rand(7)
-                genran = "".join(random.choice(main.LATIN_MOCK))
-                args = f"{genran}_{uid}_bot"
-            except Exception as e:
-                await utils.answer(message, self.strings("bot_username_invalid"))
-                return
+            from .. import main
+            uid = utils.rand(7)
+            genran = "".join(random.choice(main.LATIN_MOCK))
+            args = f"{genran}_{uid}_bot"
 
         if (
             not args.lower().endswith("bot")
