@@ -123,7 +123,7 @@ class TokenObtainment(InlineUnit):
             elif action == 4:
                 return await self._reassert_token(session, main_url, _hash)
         finally:
-            session.close()
+            await session.close()
 
 
     async def _create_bot(
