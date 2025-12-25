@@ -55,16 +55,17 @@ class TokenObtainment(InlineUnit):
     async def _get_webapp_session(self: "InlineManager", url: str) :
         session = aiohttp.ClientSession()
         params = unquote(url.split('tgWebAppData=')[1].split('&tgWebAppVersion')[0])
+        base_url = url.split("?")[0]
 
-        async with session.post(url + f"/api?hash=-", headers=headers, data={"_auth": params, "method": "auth"}) as resp:
+        async with session.post(base_url + f"/api?hash=-", headers=headers, data={"_auth": params, "method": "auth"}) as resp:
             if resp.status != 200:
                 logger.error("Error while getting Cookies to enter botfather webapp: resp%s", resp.status)
-                return False
+                raise RuntimeError("Getting Cookies failed")
         
-        async with session.post(url, headers=headers) as resp:
+        async with session.get(base_url, headers=headers) as resp:
             if resp.status != 200:
                 logger.error("Error while getting hash: resp%s", resp.status)
-                return False
+                return RuntimeError("Getting api hash failed")
             text = await resp.text()
             _hash = re.search(HASH_PATTERN, text)
             if _hash:
@@ -95,7 +96,8 @@ class TokenObtainment(InlineUnit):
         result = await self._get_webapp_session(url)
         
         if not result or isinstance(result, bool):
-            return("WebApp is not available now")
+            logger.error("WebApp is not available now")
+            return False
 
         session, _hash = result
         
