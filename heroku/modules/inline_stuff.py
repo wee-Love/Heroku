@@ -12,6 +12,7 @@
 
 import re
 import string
+import random
 
 from herokutl.errors.rpcerrorlist import YouBlockedUserError
 from herokutl.tl.functions.contacts import UnblockRequest
