@@ -302,7 +302,6 @@ class TokenObtainment(InlineUnit):
                     if resp.status != 200:
                         logger.error("Error while changing bot inline settings: resp%s", resp.status)
                         return False
-                    logger.info(await resp.text())
 
             return True
 
