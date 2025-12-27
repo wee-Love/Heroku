@@ -111,19 +111,19 @@ class UpdaterMod(loader.Module):
             return ""
 
     @loader.loop(interval=60, autostart=True)
-    async def poller_announcement(self):
-        async with aiohttp.ClientSession() as session:
-            try:
-                r = await session.get(
-                    "https://raw.githubusercontent.com/Midga3/HerokuAnnounceTest/refs/heads/main/main.txt", timeout=aiohttp.ClientTimeout(total=10)
-                )
-                if r.status == 200:
-                    announcement = await r.text()
-                    if self.get("announcement") != announcement:
-                        await self.inline.bot.send_message(chat_id=self.tg_id, text=announcement)
-                        self.set("announcement", announcement)
+        async def poller_announcement(self):
+            async with aiohttp.ClientSession() as session:
+                try:
+                     url = "https://raw.githubusercontent.com/Midga3/HerokuAnnounceTest/main/main.txt"
+                     r = await session.get(url, timeout=aiohttp.ClientTimeout(total=10))
+                     if r.status == 200:
+                         announcement = (await r.text()).strip()
+                         previous = self.db.get("Updater", "announcement", "")
+                         if announcement and announcement != previous:
+                             await self.inline.bot.send_message(self.tg_id, announcement)
+                             self.db.set("Updater", "announcement", announcement)
             except Exception:
-                pass 
+                logger.exception("Announcement poller failed")
             
 
     @loader.loop(interval=60, autostart=True)
