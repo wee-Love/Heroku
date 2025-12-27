@@ -112,6 +112,20 @@ class UpdaterMod(loader.Module):
 
     @loader.loop(interval=60, autostart=True)
     async def poller(self):
+        async with aiohttp.ClientSession() as session:
+            try:
+                r = await session.get(
+                    "https://raw.githubusercontent.com/Midga3/HerokuAnnounceTest/refs/heads/main/main.txt", timeout=aiohttp.ClientTimeout(total=10)
+                )
+                if r.status == 200:
+                    announcement = await r.text()
+                    await self.inline.bot.send_message(chat_id=self.tg_id, text=announcement)
+            except Exception:
+                pass 
+            
+
+    @loader.loop(interval=60, autostart=True)
+    async def poller(self):
         if (self.config["disable_notifications"] and not self.config["autoupdate"]) or not self.get_changelog():
             return
 
