@@ -111,7 +111,7 @@ class UpdaterMod(loader.Module):
             return ""
 
     @loader.loop(interval=60, autostart=True)
-    async def poller(self):
+    async def poller_announcement(self):
         async with aiohttp.ClientSession() as session:
             try:
                 r = await session.get(
