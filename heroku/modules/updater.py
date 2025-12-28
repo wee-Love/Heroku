@@ -123,7 +123,7 @@ class UpdaterMod(loader.Module):
                         await self.inline.bot.send_message(self.tg_id, f"{self.strings('announcement')}\n\n{announcement}")
                         self.db.set("Updater", "announcement", announcement)
             except Exception:
-                logger.exception("Announcement poller failed")
+                pass
             
 
     @loader.loop(interval=60, autostart=True)
