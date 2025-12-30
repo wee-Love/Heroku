@@ -401,7 +401,7 @@ updater:
   autoupdate: "🛡 Unit Alpha ermöglicht es auch, Updates zu ignorieren und <b>automatisch zu aktualisieren</b>!\n\n💫 Große Updates, wie der Wechsel der globalen Version (1.x.x -> 2.x.x), werden jedoch bei automatischen Updates ignoriert und müssen manuell durchgeführt werden"
   autoupdate_on: "🎆 Automatische Updates <b>wurden aktiviert!\nViel Spaß!</b>"
   autoupdate_off: "❌ Automatische Updates <b>wurden deaktiviert!</b>\nUm sie zu aktivieren, verwenden Sie den Befehl <code>{prefix}autoupdate</code>"
-  announcement: "<b>📢 Ankündigung:</b>"
+  announcement: "<b>📢 Ankündigung:</b>\n\n<blockquote>{}</blockquote>"
   _cfg_doc_autoupdate: "💫 Automatische Updates für Ihr Heroku"
   _cmd_doc_restart: "Startet den Userbot neu"
   _cmd_doc_source: "Zeigt den Link zum Quellcode des Projekts"
