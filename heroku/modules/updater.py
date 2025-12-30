@@ -114,14 +114,22 @@ class UpdaterMod(loader.Module):
     async def poller_announcement(self):
         async with aiohttp.ClientSession() as session:
             try:
-                url = ""
-                r = await session.get(url, timeout=aiohttp.ClientTimeout(total=10))
+                url = "https://api.github.com/repos/.../?ref=master"
+                r = await session.get(
+                    url,
+                    timeout=aiohttp.ClientTimeout(total=10),
+                    headers={"Accept": "application/vnd.github.v3.raw"}
+                )
+
                 if r.status == 200:
                     announcement = (await r.text()).strip()
-                    previous = self.db.get("Updater", "announcement", "")
+                    previous = self.get("announcement", "")
                     if announcement and announcement != previous:
-                        await self.inline.bot.send_message(self.tg_id, f"{self.strings('announcement')}\n\n{announcement}")
-                        self.db.set("Updater", "announcement", announcement)
+                        await self.inline.bot.send_message(
+                            self.tg_id,
+                            self.strings("announcement").format(announcement)
+                        )
+                        self.set("announcement", announcement)
             except Exception:
                 pass
             
