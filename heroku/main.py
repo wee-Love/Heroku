@@ -915,8 +915,6 @@ class Heroku:
                         "." if pref is None else pref,
                     )
                 ),
-            )
-хуй
             logging.debug(
                 "· Started for %s · Prefix: «%s» ·",
                 client.tg_id,
