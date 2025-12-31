@@ -111,6 +111,30 @@ class UpdaterMod(loader.Module):
             return ""
 
     @loader.loop(interval=60, autostart=True)
+    async def poller_announcement(self):
+        async with aiohttp.ClientSession() as session:
+            try:
+                url = "https://api.github.com/repos/.../?ref=master"
+                r = await session.get(
+                    url,
+                    timeout=aiohttp.ClientTimeout(total=10),
+                    headers={"Accept": "application/vnd.github.v3.raw"}
+                )
+
+                if r.status == 200:
+                    announcement = (await r.text()).strip()
+                    previous = self.get("announcement", "")
+                    if announcement and announcement != previous:
+                        await self.inline.bot.send_message(
+                            self.tg_id,
+                            self.strings("announcement").format(announcement)
+                        )
+                        self.set("announcement", announcement)
+            except Exception:
+                pass
+            
+
+    @loader.loop(interval=60, autostart=True)
     async def poller(self):
         if (self.config["disable_notifications"] and not self.config["autoupdate"]) or not self.get_changelog():
             return
