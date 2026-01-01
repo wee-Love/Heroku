@@ -265,7 +265,7 @@ class TokenObtainment(InlineUnit):
                 content = await resp.json()
             result = content.get("ok", False)
         return result
-        
+
     async def assert_token(
         self: "InlineManager",
         create_new_if_needed: bool = True,
