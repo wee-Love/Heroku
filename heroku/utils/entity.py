@@ -26,7 +26,6 @@ from herokutl.tl.functions.channels import (
     EditAdminRequest,
     EditPhotoRequest,
     InviteToChannelRequest,
-    GetForumTopicsByIDRequest,
     CreateForumTopicRequest,
     EditForumTopicRequest,
 )
