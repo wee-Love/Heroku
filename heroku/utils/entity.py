@@ -23,7 +23,12 @@ from herokutl.tl.custom.message import Message
 from herokutl.tl.functions.account import UpdateNotifySettingsRequest
 from herokutl.tl.functions.channels import (
     CreateChannelRequest,
+    EditAdminRequest,
     EditPhotoRequest,
+    InviteToChannelRequest,
+    GetForumTopicsByIDRequest,
+    CreateForumTopicRequest,
+    EditForumTopicRequest,
 )
 from herokutl.tl.functions.messages import (
     GetDialogFiltersRequest,
@@ -57,6 +62,8 @@ from herokutl.tl.types import (
     PeerUser,
     UpdateNewChannelMessage,
     User,
+    ForumTopic,
+    ForumTopicDeleted,
 )
 
 from .other import invite_inline_bot, run_sync
