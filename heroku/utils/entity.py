@@ -644,3 +644,69 @@ def ascii_face() -> str:
             ]
         )
     )
+
+async def asset_forum_topic(
+    client: CustomTelegramClient,
+    db: 'Database',
+    peer: hints.Entity,
+    title: str,
+    description: typing.Optional[str] = None,
+    icon_emoji_id: typing.Optional[int] = None,
+    invite_bot: bool = False,
+) -> ForumTopic:
+    entity = await client.get_entity(peer)
+
+    if not isinstance(entity, Channel):
+        raise TypeError(f"Expected entity to be 'Channel', but got '{type(entity).__name__}'")
+
+    async def create_topic() -> ForumTopic:
+        result = await client(CreateForumTopicRequest(
+            channel=entity,
+            title=title,
+            icon_emoji_id=(icon_emoji_id if client.heroku_me.premium else None)
+        ))
+
+        await fw_protect()
+
+        await client.send_message(entity=entity, message=(description if description else f"<emoji document_id=5258503720928288433>ℹ️</emoji> <b>Content related to <i>'{title}'</i> will be here</b>"), reply_to=result.updates[0].id)
+
+        await fw_protect()
+
+        result = await client(GetForumTopicsByIDRequest(channel=entity, topics=[result.updates[0].id]))
+
+        return result.topics[0]
+
+    forums_cache = db.get("heroku.forums", "forums_cache", {})
+
+    if (topic_id := forums_cache.get(entity.title, {}).get(title)):
+        await fw_protect()
+        topic = await client(GetForumTopicsByIDRequest(channel=entity, topics=[topic_id]))
+        topic = topic.topics[0]
+
+        if not isinstance(topic, ForumTopicDeleted):
+            return topic
+        else:
+            logger.warning(f"Topic: '{title}' was found in the database but does not exist in the channel and will be recreated")
+            await fw_protect()
+            new_topic = await create_topic()
+            forums_cache[entity.title][title] = new_topic.id
+
+    else:
+        await fw_protect()
+        new_topic = await create_topic()
+        forums_cache.setdefault(entity.title, {})[title] = new_topic.id
+
+    db.set("heroku.forums", "forums_cache", forums_cache)
+
+    if invite_bot:
+        await fw_protect()
+        if all(
+            p.id != client.loader.inline.bot_id
+            for p in await client.get_participants(
+                entity, limit=20
+            )
+        ):
+            await fw_protect()
+            await invite_inline_bot(client, entity)
+
+    return new_topic
