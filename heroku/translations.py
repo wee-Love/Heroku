@@ -35,6 +35,10 @@ SUPPORTED_LANGUAGES = {
     "jp": "🇯🇵 日本語",
     "fr": "🇫🇷 Français",
 }
+MEME_LANGUAGES = {
+    "leet": "🏴‍☠️ 1337",
+    "fuwwy": "🏴‍☠️ Fuwwy :3",
+}
 
 
 def fmt(text: str, kwargs: dict) -> str:

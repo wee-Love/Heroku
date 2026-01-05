@@ -32,6 +32,36 @@ class Translations(loader.Module):
 
         await call.edit(self.strings("lang_saved").format(self._get_flag(lang)))
 
+    async def _choose_language(self, message: Message | InlineCall, is_meme: bool = False):
+        reply_markup = utils.chunks(
+            [
+                {
+                    "text": text,
+                    "callback": self._change_language,
+                    "args": (lang,),
+                }
+                for lang, text in (
+                    translations.SUPPORTED_LANGUAGES.items() if not is_meme
+                    else translations.MEME_LANGUAGES.items()
+                )
+            ],
+            2,
+        )
+
+        back_btn = {
+            "text": self.strings("off_langs") if is_meme else self.strings("meme_langs"),
+            "callback": self._choose_language,
+            "args": (not is_meme,),
+        }
+
+        reply_markup.append([back_btn])
+
+        await utils.answer(
+            message=message,
+            response=self.strings("choose_language"),
+            reply_markup=reply_markup,
+        )
+
     def _get_flag(self, lang: str) -> str:
         emoji_flags = {
             "🇬🇧": "<emoji document_id=6323589145717376403>🇬🇧</emoji>",
@@ -46,9 +76,13 @@ class Translations(loader.Module):
             "🥟": "<emoji document_id=5382337996123020810>🥟</emoji>",
             "🇯🇵": "<emoji document_id=5456261908069885892>🇯🇵</emoji>",
             "🇫🇷": "<emoji document_id=5202132623060640759>🇫🇷</emoji>",
+            "🏴‍☠️": "<emoji document_id=5386372293263892965>🏴‍☠️</emoji>",
         }
 
         lang2country = {"en": "🇬🇧", "tt": "🥟", "kk": "🇰🇿", "ua": "🇺🇦", "de": "🇩🇪", "jp": "🇯🇵", "fr": "🇫🇷"}
+
+        for meme in translations.MEME_LANGUAGES.keys():
+            lang2country[meme] = "🏴‍☠️"
 
         lang = lang2country.get(lang) or utils.get_lang_flag(lang)
         return emoji_flags.get(lang, lang)
@@ -56,21 +90,7 @@ class Translations(loader.Module):
     @loader.command()
     async def setlang(self, message: Message):
         if not (args := utils.get_args_raw(message).lower()):
-            await self.inline.form(
-                message=message,
-                text=self.strings("choose_language"),
-                reply_markup=utils.chunks(
-                    [
-                        {
-                            "text": text,
-                            "callback": self._change_language,
-                            "args": (lang,),
-                        }
-                        for lang, text in translations.SUPPORTED_LANGUAGES.items()
-                    ],
-                    2,
-                ),
-            )
+            await self._choose_language(message=message)
             return
 
         if any(len(i) != 2 and not utils.check_url(i) for i in args.split()):
