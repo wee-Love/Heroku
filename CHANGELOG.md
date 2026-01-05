@@ -19,6 +19,14 @@
 - update heroku-tl to 2.0.0
 - add time execution to eval and terminal
 - add type annotations (developer oriented)
+- add japanese language
+- add french language
+- add protection for messages from 777000 and 489000
+- add help -c (core modules) and help -l (loaded modules)
+- new info
+- fix folders
+- rework bot creation
+- add python version in info
 
 ## 🪐 Heroku 1.7.2
 - added autoupdate
