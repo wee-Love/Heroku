@@ -37,7 +37,7 @@ SUPPORTED_LANGUAGES = {
 }
 MEME_LANGUAGES = {
     "leet": "🏴‍☠️ 1337",
-    "fuwwy": "🏴‍☠️ Fuwwy :3",
+    "uwu": "🏴‍☠️ UwU",
 }
 
 
