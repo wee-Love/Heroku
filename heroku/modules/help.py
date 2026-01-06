@@ -10,6 +10,7 @@
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 # 🔑 https://www.gnu.org/licenses/agpl-3.0.html
 
+import asyncio
 import difflib
 import inspect
 import logging
@@ -343,15 +344,25 @@ class Help(loader.Module):
                 else:
                     tmp += f" | {cmd}"
 
-            icommands = [
-                name
-                for name, func in mod.inline_handlers.items()
-                if await self.inline.check_inline_security(
-                    func=func,
-                    user=message.sender_id if not message.out else self._client.tg_id,
+            icommands = []
+
+            if force:
+                icommands.extend([*mod.inline_handlers.keys()])
+            else:            
+                results = await asyncio.gather(
+                    (
+                        self.inline.check_inline_security(
+                            func=func,
+                            user=message.sender_id if not message.out else self._client.tg_id,
+                        ) for func in mod.inline_handlers.values()
+                    )
                 )
-                or force
-            ]
+
+                icommands = [
+                    name for name, passed
+                    in zip(mod.inline_handlers.keys(), results)
+                    if passed is True
+                ]
 
             for cmd in icommands:
                 if first:
