@@ -4,7 +4,7 @@
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 # 🔑 https://www.gnu.org/licenses/agpl-3.0.html
 
-# ©️ Codrago, 2024-2025
+# ©️ Codrago, 2024-2030
 # This file is a part of Heroku Userbot
 # 🌐 https://github.com/coddrago/Heroku
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
@@ -20,7 +20,6 @@ from herokutl import TelegramClient
 from herokutl import __name__ as __base_name__
 from herokutl import helpers
 from herokutl._updates import ChannelState, Entity, EntityType, SessionState
-from herokutl.errors import RPCError
 from herokutl.errors.rpcerrorlist import TopicDeletedError
 from herokutl.hints import EntityLike
 from herokutl.network import MTProtoSender
