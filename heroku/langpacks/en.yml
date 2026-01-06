@@ -596,6 +596,8 @@ translations:
   check_url: "<emoji document_id=5210952531676504517>🚫</emoji> <b>You need to specify valid url containing a langpack</b>"
   too_long: "<emoji document_id=5341492148468465410>📁</emoji> <b>Command output seems to be too long, so it's sent in file.</b>"
   choose_language: "🗽 <b>Choose language</b>"
+  off_langs: "🏴‍☠️ Official LangPacks"
+  meme_langs: "🏴‍☠️ Meme LangPacks"
   not_official: "<emoji document_id=5312383351217201533>⚠️</emoji> <b>This language is not officially supported</b>"
   requested_join: "💫 <b>Module</b> <code>{}</code> <b>requested to join channel <a href='https://t.me/{}'>{}</a></b>\n\n<b>❓ Reason:</b> <i>{}</i>"
   fw_error: "<emoji document_id=5877458226823302157>🕒</emoji> <b>Call</b> <code>{}</code> <b>caused FloodWait of {} on method</b> <code>{}</code>"

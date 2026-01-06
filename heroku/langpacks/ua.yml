@@ -563,6 +563,8 @@ translations:
   check_url: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Ви маєте вказати посилання, що містить пакет переказів</b>"
   too_long: "<emoji document_id=5341492148468465410>📁</emoji> <b>Висновок команди занадто довгий, тому його надіслано у файлі.</b>"
   choose_language: "🗽 <b>Оберіть мову</b>"
+  off_langs: "🏴‍☠️ Офіційні LangPacks"
+  meme_langs: "🏴‍☠️ Мемні LangPacks"
   not_official: "<emoji document_id=5312383351217201533>⚠️</emoji> <b>Цю мову не підтримують офіційно</b>"
   requested_join: "💫 <b>Модуль</b> <code>{}</code> <b>запросив приєднання до каналу <a href='https://t.me/{}'>{}</a></b>\n\n<b>❓ Причина:</b> <i>{}</i>"
   fw_error: "<emoji document_id=5877458226823302157>🕒</emoji> <b>Команда</b> <code>{}</code> <b>викликав FloodWait {} у методі</b> <code> {}</code>"

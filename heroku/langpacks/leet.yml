@@ -596,6 +596,8 @@ translations:
   check_url: "<emoji document_id=5210952531676504517>🚫</emoji> <b>U n33d 2 sp3c1fy v4l1d url c0n741n1ng 4 l4ngp4ck</b>"
   too_long: "<emoji document_id=5341492148468465410>📁</emoji> <b>Cmd 0u7pu7 s33m5 2 b3 2 l0ng, 50 17'5 s3n7 1n f1l3.</b>"
   choose_language: "🗽 <b>Ch0053 l4ngu4g3</b>"
+  off_langs: "🏴‍☠️ 0ff1c14l L4ngP4cks"
+  meme_langs: "🏴‍☠️ M3m3 L4ngP4cks"
   not_official: "<emoji document_id=5312383351217201533>⚠️</emoji> <b>7h15 l4ngu4g3 15 n07 0ff1c14lly supp0r73d</b>"
   requested_join: "💫 <b>M0dul3</b> <code>{}</code> <b>r3qu3573d 2 j01n ch4nn3l <a href='https://t.me/{}'>{}</a></b>\n\n<b>❓ R3450n:</b> <i>{}</i>"
   fw_error: "<emoji document_id=5877458226823302157>🕒</emoji> <b>C4ll</b> <code>{}</code> <b>c4u53d Fl00dW417 0f {} 0n m37h0d</b> <code>{}</code>"

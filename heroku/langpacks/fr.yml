@@ -596,6 +596,8 @@ translations:
   check_url: "<emoji document_id=5210952531676504517>🚫</emoji> <b>Vous devez spécifier une url valide contenant un langpack</b>"
   too_long: "<emoji document_id=5341492148468465410>📁</emoji> <b>La sortie de la commande semble être trop longue, elle est donc envoyée dans un fichier.</b>"
   choose_language: "🗽 <b>Choisissez la langue</b>"
+  off_langs : "🏴‍☠️ Packs de langues officiels"
+  meme_langs : "🏴‍☠️ Packs de langues meme"
   not_official: "<emoji document_id=5312383351217201533>⚠️</emoji> <b>Cette langue n'est pas officiellement supportée</b>"
   requested_join: "💫 <b>Le module</b> <code>{}</code> <b>a demandé à rejoindre la chaîne <a href='https://t.me/{}'>{}</a></b>\n\n<b>❓ Raison :</b> <i>{}</i>"
   fw_error: "<emoji document_id=5877458226823302157>🕒</emoji> <b>L'appel</b> <code>{}</code> <b>a causé un FloodWait de {} sur la méthode</b> <code>{}</code>"

@@ -596,6 +596,8 @@ translations:
   check_url: "<emoji document_id=5210952531676504517>🚫</emoji> <b>langpackを含む有効なURLを指定する必要があります</b>"
   too_long: "<emoji document_id=5341492148468465410>📁</emoji> <b>コマンドの出力が長すぎるため、ファイルで送信されます。</b>"
   choose_language: "🗽 <b>言語を選択してください</b>"
+  off_langs: "🏴‍☠️ 公式"
+  meme_langs: "🏴‍☠️ ミーム"
   not_official: "<emoji document_id=5312383351217201533>⚠️</emoji> <b>この言語は公式にサポートされていません</b>"
   requested_join: "💫 <b>モジュール</b> <code>{}</code> <b>がチャンネル <a href='https://t.me/{}'>{}</a> への参加をリクエストしました</b>\n\n<b>❓ 理由:</b> <i>{}</i>"
   fw_error: "<emoji document_id=5877458226823302157>🕒</emoji> <b>呼び出し</b> <code>{}</code> <b>により、メソッド</b> <code>{}</code> <b>で {} の FloodWait が発生しました</b>"

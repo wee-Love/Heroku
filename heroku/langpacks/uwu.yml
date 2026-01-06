@@ -596,6 +596,8 @@ translations:
   check_url: "<emoji document_id=5210952531676504517>🚫</emoji> <b>You nyeed to specify vawid uww containing a wangpack</b>"
   too_long: "<emoji document_id=5341492148468465410>📁</emoji> <b>Command output seems to be too wong, so it's sent in fiwe.</b>"
   choose_language: "🗽 <b>Choose wangwuage</b>"
+  off_langs: "🏴‍☠️ Officiaw WangPacks"
+  meme_langs: "🏴‍☠️ Meme WangPacks"
   not_official: "<emoji document_id=5312383351217201533>⚠️</emoji> <b>Dis wangwuage is nyot officiawwy suppowted</b>"
   requested_join: "💫 <b>Moduwe</b> <code>{}</code> <b>wequested to join channyew <a href='https://t.me/{}'>{}</a></b>\n\n<b>❓ Weason:</b> <i>{}</i>"
   fw_error: "<emoji document_id=5877458226823302157>🕒</emoji> <b>Caww</b> <code>{}</code> <b>caused FwoodWait of {} on medod</b> <code>{}</code>"
