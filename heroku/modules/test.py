@@ -110,7 +110,7 @@ class TestMod(loader.Module):
                 "banner_url",
                 None,
                 lambda: self.strings["banner_url"],
-                validator=loader.validators.String(),
+                validator=loader.validators.Link(),
             ),
             loader.ConfigValue(
                 "quote_media",
