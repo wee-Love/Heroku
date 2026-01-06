@@ -107,7 +107,7 @@ LATIN_MOCK = [
     "Unitas", "Universus", "Uterque", "Valde", "Vates",
     "Veritas", "Verus", "Vester", "Via", "Victoria",
     "Vita", "Vox", "Vultus", "Zephyrus", "Hewoku", "Bimbalas", "Nywuctuu",
-    "Sodrago", "Anyone"
+    "Sodrago", "Anyone", "Draher", "Hackimo", "Silvyr",
 ]
 # fmt: on
 
@@ -167,6 +167,13 @@ def generate_random_system_version():
         ("Gentoo", "2023.0"),
         ("Void Linux", "2023-07-01"),
         ("IOS", "18.0.1"),
+        ("Android", "10"),
+        ("Android", "11"),
+        ("Android", "12"),
+        ("Android", "16"),
+        ("IOS", "17.0"),
+        ("IOS", "16.0"),
+        ("IOS", "26.0"),
     ]
     os_name, os_version = random.choice(os_choices)
 

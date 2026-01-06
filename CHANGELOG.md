@@ -15,7 +15,6 @@
 - add multiload
 - fix error in help lib
 - add config to internet error ignore
-- add hsearch!!
 - update heroku-tl to 2.0.0
 - add time execution to eval and terminal
 - add type annotations (developer oriented)
@@ -27,6 +26,11 @@
 - fix folders
 - rework bot creation
 - add python version in info
+- remove -S flag from sudo
+- add link validator to help, info, ping
+- add meme lang packs
+- add UwU language to meme pack
+- add leet(1337) to meme pack
 
 ## 🪐 Heroku 1.7.2
 - added autoupdate
