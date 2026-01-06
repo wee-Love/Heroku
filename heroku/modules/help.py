@@ -350,7 +350,7 @@ class Help(loader.Module):
                 icommands.extend([*mod.inline_handlers.keys()])
             else:            
                 results = await asyncio.gather(
-                    (
+                    *(
                         self.inline.check_inline_security(
                             func=func,
                             user=message.sender_id if not message.out else self._client.tg_id,
