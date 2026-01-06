@@ -354,18 +354,6 @@ class TerminalMod(loader.Module):
         cmd: str,
         editor: typing.Optional[MessageEditor] = None,
     ):
-        if len(cmd.split(" ")) > 1 and cmd.split(" ")[0] == "sudo":
-            needsswitch = True
-
-            for word in cmd.split(" ", 1)[1].split(" "):
-                if word[0] != "-":
-                    break
-
-                if word == "-S":
-                    needsswitch = False
-
-            if needsswitch:
-                cmd = " ".join([cmd.split(" ", 1)[0], "-S", cmd.split(" ", 1)[1]])
 
         sproc = await asyncio.create_subprocess_exec(
             "/bin/bash", "-c", cmd,
