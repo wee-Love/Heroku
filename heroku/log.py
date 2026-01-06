@@ -6,7 +6,7 @@
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 # 🔑 https://www.gnu.org/licenses/agpl-3.0.html
 
-# ©️ Codrago, 2024-2030
+# ©️ Codrago, 2024-2025
 # This file is a part of Heroku Userbot
 # 🌐 https://github.com/coddrago/Heroku
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
@@ -23,6 +23,7 @@ import sys
 import traceback
 import typing
 from logging.handlers import RotatingFileHandler
+from collections.abc import Coroutine
 
 import herokutl
 from aiogram.exceptions import TelegramNetworkError, TelegramRetryAfter
@@ -362,9 +363,10 @@ class TelegramLogsHandler(logging.Handler):
                 for client_id in self._mods
             }
 
-            for exceptions in self._exc_queue.values():
-                for exc in exceptions:
-                    asyncio.create_task(self.avoid_floodwait(exc))
+            await asyncio.gather(
+                *(self._exc_sender(*exceptions)
+                for exceptions in self._exc_queue.values())
+            )
 
             self.tg_buff = []
 
@@ -399,14 +401,27 @@ class TelegramLogsHandler(logging.Handler):
                                 disable_notification=True,
                             )
                         )
-    async def avoid_floodwait(self, exc):
-        try:
-            await exc
-        except TelegramRetryAfter as e:
-            await asyncio.sleep(e.retry_after)
-            await self.avoid_floodwait(exc)
-        except RuntimeError:
-            pass
+    # \*
+    # async def avoid_floodwait(self, exc):
+    #     try:
+    #         await exc
+    #     except TelegramRetryAfter as e:
+    #         await asyncio.sleep(e.retry_after)
+    #         await self.avoid_floodwait(exc)
+    #     except RuntimeError:
+    #         pass
+    # *\
+
+    async def _exc_sender(self, *coros: Coroutine):
+        for coro in coros:
+            try:
+                await coro
+            except TelegramRetryAfter as e:
+                await asyncio.sleep(e.retry_after)
+            except RuntimeError:
+                pass
+            except Exception:
+                return
 
     def emit(self, record: logging.LogRecord):
         try:
