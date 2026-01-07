@@ -353,13 +353,11 @@ class TerminalMod(loader.Module):
         editor: typing.Optional[MessageEditor] = None,
     ):
 
-        shell = os.environ.get("SHELL", "sh")
-        if shell == "/bin/bash":
-            shell += " -c"
+        shell = os.environ.get("SHELL", "/bin/sh")
 
         try:
             sproc = await asyncio.create_subprocess_exec(
-                shell, cmd,
+                shell, "-c", cmd,
                 stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
