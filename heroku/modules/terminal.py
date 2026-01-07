@@ -11,8 +11,6 @@
 # You can redistribute it and/or modify it under the terms of the GNU AGPLv3
 # 🔑 https://www.gnu.org/licenses/agpl-3.0.html
 
-# meta developer: @bsolute
-
 import asyncio
 import contextlib
 import logging
@@ -355,8 +353,10 @@ class TerminalMod(loader.Module):
         editor: typing.Optional[MessageEditor] = None,
     ):
 
+        shell = os.environ.get("SHELL", "sh")
+
         sproc = await asyncio.create_subprocess_exec(
-            "/bin/bash", "-c", cmd,
+            shell, cmd,
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
