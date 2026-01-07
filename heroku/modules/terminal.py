@@ -354,16 +354,17 @@ class TerminalMod(loader.Module):
     ):
 
         shell = os.environ.get("SHELL", "sh")
+        if shell == "/bin/bash":
+            shell += " -c"
 
         try:
             sproc = await asyncio.create_subprocess_exec(
-                cmd,
+                shell, cmd,
                 stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
                 cwd=utils.get_base_dir(),
                 preexec_fn=os.setsid,
-                executable=shell,
             )
         except Exception as e:
             await utils.answer(
