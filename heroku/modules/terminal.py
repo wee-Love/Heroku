@@ -355,15 +355,24 @@ class TerminalMod(loader.Module):
 
         shell = os.environ.get("SHELL", "sh")
 
-        sproc = await asyncio.create_subprocess_exec(
-            cmd,
-            stdin=asyncio.subprocess.PIPE,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-            cwd=utils.get_base_dir(),
-            preexec_fn=os.setsid,
-            executable=shell,
-        )
+        try:
+            sproc = await asyncio.create_subprocess_exec(
+                cmd,
+                stdin=asyncio.subprocess.PIPE,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+                executable=shell,
+            )
+            stdout, stderr = await sproc.communicate()
+        except Exception as e:
+            await utils.answer(
+                message,
+                self.strings("exec_error").format(
+                    utils.escape_html(str(e))
+                ),
+            )
+            return
+
 
         if editor is None:
             editor = SudoMessageEditor(message, cmd, self.config, self.strings, message)
