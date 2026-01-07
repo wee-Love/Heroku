@@ -361,6 +361,8 @@ class TerminalMod(loader.Module):
                 stdin=asyncio.subprocess.PIPE,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.PIPE,
+                cwd=utils.get_base_dir(),
+                preexec_fn=os.setsid,
                 executable=shell,
             )
             stdout, stderr = await sproc.communicate()
