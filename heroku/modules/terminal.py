@@ -365,7 +365,6 @@ class TerminalMod(loader.Module):
                 preexec_fn=os.setsid,
                 executable=shell,
             )
-            stdout, stderr = await sproc.communicate()
         except Exception as e:
             await utils.answer(
                 message,
