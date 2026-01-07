@@ -356,12 +356,13 @@ class TerminalMod(loader.Module):
         shell = os.environ.get("SHELL", "sh")
 
         sproc = await asyncio.create_subprocess_exec(
-            shell, cmd,
+            cmd,
             stdin=asyncio.subprocess.PIPE,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
             cwd=utils.get_base_dir(),
             preexec_fn=os.setsid,
+            executable=shell,
         )
 
         if editor is None:
