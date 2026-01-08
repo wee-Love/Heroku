@@ -344,23 +344,24 @@ class Gallery(InlineUnit):
         ],
     ) -> typing.Union[str, bool]:
         """Parses photo url from `callback`. Returns url on success, otherwise `False`"""
-        if isinstance(callback, str):
-            photo_url = callback
-        elif isinstance(callback, list):
-            photo_url = callback[0]
-        elif asyncio.iscoroutinefunction(callback):
-            photo_url = await callback()
-        elif callable(callback):
-            photo_url = callback()
-        else:
-            logger.error(
-                (
-                    "Invalid type for `next_handler`. Expected `str`, `list` or"
-                    " `callable`, got %s"
-                ),
-                type(callback),
-            )
-            return False
+        match True:
+            case _ if isinstance(callback, str):
+                photo_url = callback
+            case _ if isinstance(callback, list):
+                photo_url = callback[0]
+            case _ if asyncio.iscoroutinefunction(callback):
+                photo_url = await callback()
+            case _ if callable(callback):
+                photo_url = callback()
+            case _:
+                logger.error(
+                    (
+                        "Invalid type for `next_handler`. Expected `str`, `list` or"
+                        " `callable`, got %s"
+                    ),
+                    type(callback),
+                )
+                return False
 
         if not isinstance(photo_url, (str, list)):
             logger.error(

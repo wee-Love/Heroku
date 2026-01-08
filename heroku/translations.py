@@ -63,10 +63,12 @@ class BaseTranslator:
         suffix: str,
         prefix: str = "heroku.modules.",
     ) -> typing.Optional[dict]:
-        if suffix == ".json":
-            return json.loads(content)
+        match suffix:
+            case ".json":
+                return json.loads(content)
+            case _:
+                content = yaml.load(content)
 
-        content = yaml.load(content)
         if all(len(key) == 2 for key in content):
             return {
                 language: {

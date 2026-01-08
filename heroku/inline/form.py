@@ -444,8 +444,9 @@ class Form(InlineUnit):
 
         form = self._units[inline_query.query]
         try:
-            if "photo" in form:
-                await inline_query.answer(
+            match True:
+                case _ if "photo" in form:
+                    await inline_query.answer(
                     [
                         InlineQueryResultPhoto(
                             id=utils.rand(20),
@@ -464,8 +465,8 @@ class Form(InlineUnit):
                     ],
                     cache_time=0,
                 )
-            elif "gif" in form:
-                await inline_query.answer(
+                case _ if "gif" in form:
+                    await inline_query.answer(
                     [
                         InlineQueryResultGif(
                             id=utils.rand(20),
@@ -483,8 +484,8 @@ class Form(InlineUnit):
                     ],
                     cache_time=0,
                 )
-            elif "video" in form:
-                await inline_query.answer(
+                case _ if "video" in form:
+                    await inline_query.answer(
                     [
                         InlineQueryResultVideo(
                             id=utils.rand(20),
@@ -504,8 +505,8 @@ class Form(InlineUnit):
                     ],
                     cache_time=0,
                 )
-            elif "file" in form:
-                await inline_query.answer(
+                case _ if "file" in form:
+                    await inline_query.answer(
                     [
                         InlineQueryResultDocument(
                             id=utils.rand(20),
@@ -522,8 +523,8 @@ class Form(InlineUnit):
                     ],
                     cache_time=0,
                 )
-            elif "location" in form:
-                await inline_query.answer(
+                case _ if "location" in form:
+                    await inline_query.answer(
                     [
                         InlineQueryResultLocation(
                             id=utils.rand(20),
@@ -537,8 +538,8 @@ class Form(InlineUnit):
                     ],
                     cache_time=0,
                 )
-            elif "audio" in form:
-                await inline_query.answer(
+                case _ if "audio" in form:
+                    await inline_query.answer(
                     [
                         InlineQueryResultAudio(
                             id=utils.rand(20),
@@ -555,8 +556,8 @@ class Form(InlineUnit):
                     ],
                     cache_time=0,
                 )
-            else:
-                await inline_query.answer(
+                case _:
+                    await inline_query.answer(
                     [
                         InlineQueryResultArticle(
                             id=utils.rand(20),

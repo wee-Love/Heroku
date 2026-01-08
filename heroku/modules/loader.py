@@ -377,16 +377,17 @@ class LoaderMod(loader.Module):
         mode: str,
     ):
         save = False
-        if mode == "all_yes":
-            self._db.set(main.__name__, "permanent_modules_fs", True)
-            self._db.set(main.__name__, "disable_modules_fs", False)
-            await call.answer(self.strings("will_save_fs"))
-            save = True
-        elif mode == "all_no":
-            self._db.set(main.__name__, "disable_modules_fs", True)
-            self._db.set(main.__name__, "permanent_modules_fs", False)
-        elif mode == "once":
-            save = True
+        match mode:
+            case "all_yes":
+                self._db.set(main.__name__, "permanent_modules_fs", True)
+                self._db.set(main.__name__, "disable_modules_fs", False)
+                await call.answer(self.strings("will_save_fs"))
+                save = True
+            case "all_no":
+                self._db.set(main.__name__, "disable_modules_fs", True)
+                self._db.set(main.__name__, "permanent_modules_fs", False)
+            case "once":
+                save = True
 
         await self.load_module(doc, call, origin=path_ or "<string>", save_fs=save)
 

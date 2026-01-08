@@ -395,27 +395,13 @@ class Heroku:
         Get proxy tuple from --proxy-host, --proxy-port and --proxy-secret
         and connection to use (depends on proxy - provided or not)
         """
-        if (
-            self.arguments.proxy_host is not None
-            and self.arguments.proxy_port is not None
-            and self.arguments.proxy_secret is not None
-        ):
-            logging.debug(
-                "Using proxy: %s:%s",
-                self.arguments.proxy_host,
-                self.arguments.proxy_port,
-            )
-            self.proxy, self.conn = (
-                (
-                    self.arguments.proxy_host,
-                    self.arguments.proxy_port,
-                    self.arguments.proxy_secret,
-                ),
-                ConnectionTcpMTProxyRandomizedIntermediate,
-            )
-            return
-
-        self.proxy, self.conn = None, ConnectionTcpFull
+        match (self.arguments.proxy_host, self.arguments.proxy_port, self.arguments.proxy_secret):
+            case (host, port, secret) if host and port and secret:
+                logging.debug("Using proxy: %s:%s", host, port)
+                self.proxy = (host, port, secret)
+                self.conn = ConnectionTcpMTProxyRandomizedIntermediate
+            case _:
+                self.proxy, self.conn = None, ConnectionTcpFull
 
     def _read_sessions(self):
         """Gets sessions from environment and data directory"""
@@ -673,15 +659,17 @@ class Heroku:
                 )
             )
 
-            if (
-                input(
-                    "\033[0;96mUse QR code? [y/N]: \033[0m"
-                    if self.arguments.tty
-                    else "Use QR code? [y/N]: "
-                ).lower()
-                != "y"
-            ):
-                return await self._phone_login(client)
+            user_choice = input(
+                "\033[0;96mUse QR code? [y/N]: \033[0m"
+                if self.arguments.tty
+                else "Use QR code? [y/N]: "
+            ).lower()
+
+            match user_choice:
+                case "y":
+                    pass
+                case _:
+                    return await self._phone_login(client)
 
             print("\033[0;96mLoading QR code...\033[0m")
             qr_login = await client.qr_login()
@@ -713,48 +701,51 @@ class Heroku:
 
                 return False
 
-            if (qr_logined := await qr_login_poll()) is None:
-                return await self._phone_login(client)
+            match await qr_login_poll():
+                case None:
+                    return await self._phone_login(client)
 
-            if qr_logined:
-                print_banner("2fa.txt")
-                password = await client(GetPasswordRequest())
-                while True:
-                    _2fa = getpass(
-                        f"\033[0;96mEnter 2FA password ({password.hint}): \033[0m"
-                        if self.arguments.tty
-                        else f"Enter 2FA password ({password.hint}): "
-                    )
-                    try:
-                        await client._on_login(
-                            (
-                                await client(
-                                    CheckPasswordRequest(
-                                        compute_check(password, _2fa.strip())
+                case True:
+                    print_banner("2fa.txt")
+                    password = await client(GetPasswordRequest())
+                    while True:
+                        _2fa = getpass(
+                            f"\033[0;96mEnter 2FA password ({password.hint}): \033[0m"
+                            if self.arguments.tty
+                            else f"Enter 2FA password ({password.hint}): "
+                        )
+                        try:
+                            await client._on_login(
+                                (
+                                    await client(
+                                        CheckPasswordRequest(
+                                            compute_check(password, _2fa.strip())
+                                        )
                                     )
-                                )
-                            ).user
-                        )
-                    except PasswordHashInvalidError:
-                        print("\033[0;91mInvalid 2FA password!\033[0m")
-                    except FloodWaitError as e:
-                        seconds, minutes, hours = (
-                            e.seconds % 3600 % 60,
-                            e.seconds % 3600 // 60,
-                            e.seconds // 3600,
-                        )
-                        seconds, minutes, hours = (
-                            f"{seconds} second(-s)",
-                            f"{minutes} minute(-s) " if minutes else "",
-                            f"{hours} hour(-s) " if hours else "",
-                        )
-                        print(
-                            "\033[0;91mYou got FloodWait error! Please wait"
-                            f" {hours}{minutes}{seconds}\033[0m"
-                        )
-                        return False
-                    else:
-                        break
+                                ).user
+                            )
+                        except PasswordHashInvalidError:
+                            print("\033[0;91mInvalid 2FA password!\033[0m")
+                        except FloodWaitError as e:
+                            seconds, minutes, hours = (
+                                e.seconds % 3600 % 60,
+                                e.seconds % 3600 // 60,
+                                e.seconds // 3600,
+                            )
+                            seconds, minutes, hours = (
+                                f"{seconds} second(-s)",
+                                f"{minutes} minute(-s) " if minutes else "",
+                                f"{hours} hour(-s) " if hours else "",
+                            )
+                            print(
+                                "\033[0;91mYou got FloodWait error! Please wait"
+                                f" {hours}{minutes}{seconds}\033[0m"
+                            )
+                            return False
+                        else:
+                            break
+                case False:
+                    pass
 
             print_banner("success.txt")
             print("\033[0;92mLogged in successfully!\033[0m")

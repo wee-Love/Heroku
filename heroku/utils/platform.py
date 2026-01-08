@@ -51,34 +51,27 @@ def get_named_platform() -> str:
                 else:
                     return f"{model}"
 
-    if IS_WSL:
-        return "WSL"
-
-    if IS_WINDOWS:
-        return "Windows"
-
-    if IS_MACOS:
-        return "MacOS"
-
-    if IS_JAMHOST:
-        return "JamHost"
-
-    if IS_USERLAND:
-        return "UserLand"
-
-    if IS_PTERODACTYL:
-        return "Pterodactyl"
-       
-    if IS_HIKKAHOST:
-        return "HikkaHost"
-
-    if IS_DOCKER:
-        return "Docker"
-
-    if IS_LAVHOST:
-        return f"lavHost {os.environ['LAVHOST']}"
-    else:
-        return "VDS"
+    match True:
+        case _ if IS_WSL:
+            return "WSL"
+        case _ if IS_WINDOWS:
+            return "Windows"
+        case _ if IS_MACOS:
+            return "MacOS"
+        case _ if IS_JAMHOST:
+            return "JamHost"
+        case _ if IS_USERLAND:
+            return "UserLand"
+        case _ if IS_PTERODACTYL:
+            return "Pterodactyl"
+        case _ if IS_HIKKAHOST:
+            return "HikkaHost"
+        case _ if IS_DOCKER:
+            return "Docker"
+        case _ if IS_LAVHOST:
+            return f"lavHost {os.environ['LAVHOST']}"
+        case _:
+            return "VDS"
 
 def get_named_platform_emoji() -> str:
     """
@@ -97,34 +90,27 @@ def get_named_platform_emoji() -> str:
                 else:
                     return "?"
 
-    if IS_WSL:
-        return "🍀 "
-
-    if IS_WINDOWS:
-        return "💻 "
-
-    if IS_MACOS:
-         return "🍏 "
-
-    if IS_JAMHOST:
-        return "🧃 "
-
-    if IS_USERLAND:
-        return "🐧 "
-
-    if IS_PTERODACTYL:
-        return "🦅 "
-       
-    if IS_HIKKAHOST:
-        return "🌼 "
-
-    if IS_DOCKER:
-        return "🐳 "
-
-    if IS_LAVHOST:
-        return f"✌️ "
-    else:
-        return "💎 "
+    match True:
+        case _ if IS_WSL:
+            return "🍀 "
+        case _ if IS_WINDOWS:
+            return "💻 "
+        case _ if IS_MACOS:
+            return "🍏 "
+        case _ if IS_JAMHOST:
+            return "🧃 "
+        case _ if IS_USERLAND:
+            return "🐧 "
+        case _ if IS_PTERODACTYL:
+            return "🦅 "
+        case _ if IS_HIKKAHOST:
+            return "🌼 "
+        case _ if IS_DOCKER:
+            return "🐳 "
+        case _ if IS_LAVHOST:
+            return f"✌️ "
+        case _:
+            return "💎 "
 
 def get_platform_emoji() -> str:
     """
@@ -141,25 +127,21 @@ def get_platform_emoji() -> str:
         )
     )
 
-    if IS_HIKKAHOST:
-        return BASE.format(5395745114494624362)
-    
-    if IS_JAMHOST:
-        return BASE.format(5242536621659678947)
-
-    if IS_USERLAND:
-        return BASE.format(5458877818031077824)
-
-    if IS_PTERODACTYL:
-        return BASE.format(5427286516797831670)
-        
-    if IS_LAVHOST:
-        return BASE.format(5352753797531721191)
-
-    if IS_DOCKER:
-        return BASE.format(5352678227582152630)
-
-    return BASE.format(5393588431026674882)
+    match True:
+        case _ if IS_HIKKAHOST:
+            return BASE.format(5395745114494624362)
+        case _ if IS_JAMHOST:
+            return BASE.format(5242536621659678947)
+        case _ if IS_USERLAND:
+            return BASE.format(5458877818031077824)
+        case _ if IS_PTERODACTYL:
+            return BASE.format(5427286516797831670)
+        case _ if IS_LAVHOST:
+            return BASE.format(5352753797531721191)
+        case _ if IS_DOCKER:
+            return BASE.format(5352678227582152630)
+        case _:
+            return BASE.format(5393588431026674882)
 
 def uptime() -> int:
     """

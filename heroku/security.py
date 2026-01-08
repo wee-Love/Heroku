@@ -227,9 +227,13 @@ class SecurityManager:
         :param duration: rule duration in seconds
         :return: None
         """
-
-        if target_type not in {"chat", "user"}:
-            raise ValueError(f"Invalid target_type: {target_type}")
+        match target_type:
+            case "chat":
+                target_list = self._tsec_chat
+            case "user":
+                target_list = self._tsec_user
+            case _:
+                raise ValueError(f"Invalid target_type: {target_type}")
 
         if all(
             not rule.startswith(rule_type)
@@ -240,7 +244,7 @@ class SecurityManager:
         if duration < 0:
             raise ValueError(f"Invalid duration: {duration}")
 
-        (self._tsec_chat if target_type == "chat" else self._tsec_user).append(
+        target_list.append(
             {
                 "target": target.id,
                 "rule_type": rule.split("/")[0],
@@ -259,19 +263,19 @@ class SecurityManager:
         :param target_id: target entity ID
         :return: True if any rules were removed
         """
+        match target_type:
+            case "user":
+                target_list = self.tsec_user
+            case "chat":
+                target_list = self.tsec_chat
+            case _:
+                return False
 
         any_ = False
-
-        if target_type == "user":
-            for rule in self.tsec_user.copy():
-                if rule["target"] == target_id:
-                    self.tsec_user.remove(rule)
-                    any_ = True
-        elif target_type == "chat":
-            for rule in self.tsec_chat.copy():
-                if rule["target"] == target_id:
-                    self.tsec_chat.remove(rule)
-                    any_ = True
+        for rule in target_list.copy():
+            if rule["target"] == target_id:
+                target_list.remove(rule)
+                any_ = True
 
         return any_
 
@@ -284,19 +288,19 @@ class SecurityManager:
         :param rule_cont: rule name (module or command)
         :return: True if any rules were removed
         """
+        match target_type:
+            case "user":
+                target_list = self.tsec_user
+            case "chat":
+                target_list = self.tsec_chat
+            case _:
+                return False
 
         any_ = False
-
-        if target_type == "user":
-            for rule in self.tsec_user.copy():
-                if rule["target"] == target_id and rule["rule"] == rule_cont:
-                    self.tsec_user.remove(rule)
-                    any_ = True
-        elif target_type == "chat":
-            for rule in self.tsec_chat.copy():
-                if rule["target"] == target_id and rule["rule"] == rule_cont:
-                    self.tsec_chat.remove(rule)
-                    any_ = True
+        for rule in target_list.copy():
+            if rule["target"] == target_id and rule["rule"] == rule_cont:
+                target_list.remove(rule)
+                any_ = True
 
         return any_
 

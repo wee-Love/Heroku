@@ -74,23 +74,24 @@ class Brainfuck:
         loop_open = False
 
         for c in source:
-            if c == "[":
-                if loop_open:
-                    self._report_error("unexpected token '['", line, col)
-                    return True
+            match c:
+                case "[":
+                    if loop_open:
+                        self._report_error("unexpected token '['", line, col)
+                        return True
 
-                loop_open = True
-                stk.append("[")
-            elif c == "]":
-                loop_open = False
-                if len(stk) == 0:
-                    self._report_error("unexpected token ']'", line, col)
-                    return True
+                    loop_open = True
+                    stk.append("[")
+                case "]":
+                    loop_open = False
+                    if len(stk) == 0:
+                        self._report_error("unexpected token ']'", line, col)
+                        return True
 
-                stk.pop()
-            elif c == "\n":
-                line += 1
-                col = -1
+                    stk.pop()
+                case "\n":
+                    line += 1
+                    col = -1
 
             col += 1
 
@@ -104,44 +105,45 @@ class Brainfuck:
         line = col = ptr = current = 0
 
         while current < len(source):
-            if source[current] == ">":
-                if ptr == (len(self.data) - 1):
-                    self._report_error("pointer out of range", line, col)
-                    return True
+            ch = source[current]
+            match ch:
+                case ">":
+                    if ptr == (len(self.data) - 1):
+                        self._report_error("pointer out of range", line, col)
+                        return True
 
-                ptr += 1
-            elif source[current] == "<":
-                if ptr == 0:
-                    self._report_error("pointer out of range", line, col)
-                    return True
+                    ptr += 1
+                case "<":
+                    if ptr == 0:
+                        self._report_error("pointer out of range", line, col)
+                        return True
 
-                ptr -= 1
-            elif source[current] == "+":
-                if self.data[ptr] >= 2**32:
-                    self._report_error("cell overflow")
-                    return True
+                    ptr -= 1
+                case "+":
+                    if self.data[ptr] >= 2**32:
+                        self._report_error("cell overflow")
+                        return True
 
-                self.data[ptr] += 1
+                    self.data[ptr] += 1
+                case "-":
+                    if self.data[ptr] == 0:
+                        self._report_error("cell underflow")
+                        return True
 
-            elif source[current] == "-":
-                if self.data[ptr] == 0:
-                    self._report_error("cell underflow")
-                    return True
-
-                self.data[ptr] -= 1
-            elif source[current] == ".":
-                self.out += chr(self.data[ptr])
-            elif source[current] == "[":
-                if self.data[ptr] == 0:
-                    while source[current] != "]":
-                        current += 1
-            elif source[current] == "]":
-                if self.data[ptr] != 0:
-                    while source[current] != "[":
-                        current -= 1
-            elif source[current] == "\n":
-                line += 1
-                col = -1
+                    self.data[ptr] -= 1
+                case ".":
+                    self.out += chr(self.data[ptr])
+                case "[":
+                    if self.data[ptr] == 0:
+                        while source[current] != "]":
+                            current += 1
+                case "]":
+                    if self.data[ptr] != 0:
+                        while source[current] != "[":
+                            current -= 1
+                case "\n":
+                    line += 1
+                    col = -1
 
             col += 1
             current += 1

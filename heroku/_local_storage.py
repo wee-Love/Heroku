@@ -124,17 +124,18 @@ class RemoteStorage:
         """
         domain_name = url.split("/")[2]
 
-        if domain_name == "raw.githubusercontent.com":
-            owner, repo, branch = url.split("/")[3:6]
-            module_name = url.split("/")[-1].split(".")[0]
-            repo = f"git+{owner}/{repo}:{branch}"
-        elif domain_name == "github.com":
-            owner, repo, _, branch = url.split("/")[3:7]
-            module_name = url.split("/")[-1].split(".")[0]
-            repo = f"git+{owner}/{repo}:{branch}"
-        else:
-            repo, module_name = url.rsplit("/", maxsplit=1)
-            repo = repo.strip("/")
+        match domain_name:
+            case "raw.githubusercontent.com":
+                owner, repo, branch = url.split("/")[3:6]
+                module_name = url.split("/")[-1].split(".")[0]
+                repo = f"git+{owner}/{repo}:{branch}"
+            case "github.com":
+                owner, repo, _, branch = url.split("/")[3:7]
+                module_name = url.split("/")[-1].split(".")[0]
+                repo = f"git+{owner}/{repo}:{branch}"
+            case _:
+                repo, module_name = url.rsplit("/", maxsplit=1)
+                repo = repo.strip("/")
 
         return url, repo, module_name
 

@@ -288,17 +288,17 @@ class Module:
             interval = 0.1
 
         for frame in frames:
-            if isinstance(message, Message):
-                if inline:
+            match message:
+                case Message() if inline:
                     message = await self.inline.form(
                         message=message,
                         text=frame,
                         reply_markup={"text": "\u0020\u2800", "data": "empty"},
                     )
-                else:
+                case Message():
                     message = await utils.answer(message, frame)
-            elif isinstance(message, InlineMessage) and inline:
-                await message.edit(frame)
+                case InlineMessage() if inline:
+                    await message.edit(frame)
 
             await asyncio.sleep(interval)
 
@@ -366,26 +366,29 @@ class Module:
         """
         from . import utils
 
-
         channel = await self.client.get_entity(peer)
-        if isinstance(channel, ChannelForbidden):
-            if assure_joined:
-                raise LoadError(
-                    f"You need to join {channel.title} (@{peer}) in order to use this module, "
-                    "but you have been banned there"
-                )
-            return False
+        
+        match channel:
+            case ChannelForbidden():
+                if assure_joined:
+                    raise LoadError(
+                        f"You need to join {channel.title} (@{peer}) in order to use this module, "
+                        "but you have been banned there"
+                    )
+                return False
 
-        if channel.id in self._db.get("heroku.main", "declined_joins", []):
-            if assure_joined:
-                raise LoadError(
-                    f"You need to join @{channel.username} in order to use this module"
-                )
+            case _ if channel.id in self._db.get("heroku.main", "declined_joins", []):
+                if assure_joined:
+                    raise LoadError(
+                        f"You need to join @{channel.username} in order to use this module"
+                    )
+                return False
 
-            return False
-
-        if not isinstance(channel, Channel):
-            raise TypeError("`peer` field must be a channel")
+            case Channel():
+                pass
+            
+            case _:
+                raise TypeError("`peer` field must be a channel")
 
         if getattr(channel, "left", True):
             channel = await self.client.force_get_entity(peer)
@@ -931,20 +934,26 @@ class ConfigValue:
 
                         value = self.default
                 else:
-                    defaults = {
-                        "String": "",
-                        "Integer": 0,
-                        "Boolean": False,
-                        "Series": [],
-                        "Float": 0.0,
-                    }
+                    match self.validator.internal_id:
+                        case "String":
+                            default_val = ""
+                        case "Integer":
+                            default_val = 0
+                        case "Boolean":
+                            default_val = False
+                        case "Series":
+                            default_val = []
+                        case "Float":
+                            default_val = 0.0
+                        case _:
+                            default_val = None
 
-                    if self.validator.internal_id in defaults:
+                    if default_val is not None:
                         logger.debug(
                             "Config value was None, so it was reset to %s",
-                            defaults[self.validator.internal_id],
+                            default_val,
                         )
-                        value = defaults[self.validator.internal_id]
+                        value = default_val
 
             # This attribute will tell the `Loader` to save this value in db
             self._save_marker = True

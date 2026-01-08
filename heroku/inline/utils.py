@@ -135,116 +135,123 @@ class Utils(InlineUnit):
             line = []
             for button in row:
                 try:
-                    if "url" in button:
-                        if not utils.check_url(button["url"]):
-                            logger.warning(
-                                "Button have not been added to form, "
-                                "because its url is invalid"
-                            )
-                            continue
-
-                        line += [
-                            InlineKeyboardButton(
-                                text=str(button["text"]),
-                                url=button["url"],
-                            )
-                        ]
-                    elif "callback" in button:
-                        line += [
-                            InlineKeyboardButton(
-                                text=str(button["text"]),
-                                callback_data=button["_callback_data"],
-                            )
-                        ]
-                        if setup_callbacks:
-                            self._custom_map[button["_callback_data"]] = {
-                                "handler": button["callback"],
-                                **(
-                                    {"always_allow": button["always_allow"]}
-                                    if button.get("always_allow", False)
-                                    else {}
-                                ),
-                                **(
-                                    {"args": button["args"]}
-                                    if button.get("args", False)
-                                    else {}
-                                ),
-                                **(
-                                    {"kwargs": button["kwargs"]}
-                                    if button.get("kwargs", False)
-                                    else {}
-                                ),
-                                **(
-                                    {"force_me": True}
-                                    if button.get("force_me", False)
-                                    else {}
-                                ),
-                                **(
-                                    {"disable_security": True}
-                                    if button.get("disable_security", False)
-                                    else {}
-                                ),
-                            }
-                    elif "input" in button:
-                        line += [
-                            InlineKeyboardButton(
-                                text=str(button["text"]),
-                                switch_inline_query_current_chat=button["_switch_query"]
-                                + " ",
-                            )
-                        ]
-                    elif "data" in button:
-                        line += [
-                            InlineKeyboardButton(
-                                text=str(button["text"]),
-                                callback_data=button["data"],
-                            )
-                        ]
-                    elif "web_app" in button:
-                        line += [
-                            InlineKeyboardButton(
-                                text=str(button["text"]),
-                                web_app=WebAppInfo(button["data"]),
-                            )
-                        ]
-
-                    elif "copy" in button:
-                        line += [
-                            InlineKeyboardButton(
-                                text=str(button["text"]),
-                                copy_text=CopyTextButton(
-                                    text=button["copy"]
+                    match True:
+                        case _ if "url" in button:
+                            if not utils.check_url(button["url"]):
+                                logger.warning(
+                                    "Button have not been added to form, "
+                                    "because its url is invalid"
                                 )
+                                continue
+
+                            line += [
+                                InlineKeyboardButton(
+                                    text=str(button["text"]),
+                                    url=button["url"],
+                                )
+                            ]
+
+                        case _ if "callback" in button:
+                            line += [
+                                InlineKeyboardButton(
+                                    text=str(button["text"]),
+                                    callback_data=button["_callback_data"],
+                                )
+                            ]
+                            if setup_callbacks:
+                                self._custom_map[button["_callback_data"]] = {
+                                    "handler": button["callback"],
+                                    **(
+                                        {"always_allow": button["always_allow"]}
+                                        if button.get("always_allow", False)
+                                        else {}
+                                    ),
+                                    **(
+                                        {"args": button["args"]}
+                                        if button.get("args", False)
+                                        else {}
+                                    ),
+                                    **(
+                                        {"kwargs": button["kwargs"]}
+                                        if button.get("kwargs", False)
+                                        else {}
+                                    ),
+                                    **(
+                                        {"force_me": True}
+                                        if button.get("force_me", False)
+                                        else {}
+                                    ),
+                                    **(
+                                        {"disable_security": True}
+                                        if button.get("disable_security", False)
+                                        else {}
+                                    ),
+                                }
+
+                        case _ if "input" in button:
+                            line += [
+                                InlineKeyboardButton(
+                                    text=str(button["text"]),
+                                    switch_inline_query_current_chat=button["_switch_query"]
+                                    + " ",
+                                )
+                            ]
+
+                        case _ if "data" in button:
+                            line += [
+                                InlineKeyboardButton(
+                                    text=str(button["text"]),
+                                    callback_data=button["data"],
+                                )
+                            ]
+
+                        case _ if "web_app" in button:
+                            line += [
+                                InlineKeyboardButton(
+                                    text=str(button["text"]),
+                                    web_app=WebAppInfo(button["data"]),
+                                )
+                            ]
+
+                        case _ if "copy" in button:
+                            line += [
+                                InlineKeyboardButton(
+                                    text=str(button["text"]),
+                                    copy_text=CopyTextButton(
+                                        text=button["copy"]
+                                    )
+                                )
+                            ]
+
+                        case _ if "switch_inline_query_current_chat" in button:
+                            line += [
+                                InlineKeyboardButton(
+                                    text=str(button["text"]),
+                                    switch_inline_query_current_chat=button[
+                                        "switch_inline_query_current_chat"
+                                    ],
+                                )
+                            ]
+
+                        case _ if "switch_inline_query" in button:
+                            line += [
+                                InlineKeyboardButton(
+                                    text=str(button["text"]),
+                                    switch_inline_query_current_chat=button[
+                                        "switch_inline_query"
+                                    ],
+                                )
+                            ]
+
+                        case _:
+                            logger.warning(
+                                (
+                                   "Button have not been added to "
+                                    "form, because it is not structured "
+                                    "properly. %s"
+                                ),
+                                button,
                             )
-                        ]
-                        
-                    elif "switch_inline_query_current_chat" in button:
-                        line += [
-                            InlineKeyboardButton(
-                                text=str(button["text"]),
-                                switch_inline_query_current_chat=button[
-                                    "switch_inline_query_current_chat"
-                                ],
-                            )
-                        ]
-                    elif "switch_inline_query" in button:
-                        line += [
-                            InlineKeyboardButton(
-                                text=str(button["text"]),
-                                switch_inline_query_current_chat=button[
-                                    "switch_inline_query"
-                                ],
-                            )
-                        ]
-                    else:
-                        logger.warning(
-                            (
-                                "Button have not been added to "
-                                "form, because it is not structured "
-                                "properly. %s"
-                            ),
-                            button,
-                        )
                 except KeyError:
                     logger.exception(
                         "Error while forming markup! Probably, you "
@@ -857,31 +864,32 @@ class Utils(InlineUnit):
 
         main_url = url.split("?")[0]
         try:
-            if action == 1:
-                return await self._assert_token(
-                    session,
-                    main_url,
-                    _hash,
-                    create_new_if_needed=create_new_if_needed,
-                    revoke_token=revoke_token
-                )
-            elif action == 2:
-                return await self._create_bot(session, main_url, _hash)
-            elif action == 3:
-                return await self._dp_revoke_token(
-                    session,
-                    main_url,
-                    _hash,
-                    already_initialised=already_initialised
-                )
-            elif action == 4:
-                return await self._reassert_token(session, main_url, _hash)
-            elif action == 5:
-                return await self._check_bot(
-                    session,
-                    main_url,
-                    _hash,
-                    username=username
-                )
+            match action:
+                case 1:
+                    return await self._assert_token(
+                        session,
+                        main_url,
+                        _hash,
+                        create_new_if_needed=create_new_if_needed,
+                        revoke_token=revoke_token,
+                    )
+                case 2:
+                    return await self._create_bot(session, main_url, _hash)
+                case 3:
+                    return await self._dp_revoke_token(
+                        session,
+                        main_url,
+                        _hash,
+                        already_initialised=already_initialised,
+                    )
+                case 4:
+                    return await self._reassert_token(session, main_url, _hash)
+                case 5:
+                    return await self._check_bot(
+                        session,
+                        main_url,
+                        _hash,
+                        username=username,
+                    )
         finally:
             await session.close()

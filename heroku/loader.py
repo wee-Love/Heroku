@@ -153,14 +153,15 @@ native_import = builtins.__import__
 
 
 def patched_import(name: str, *args, **kwargs):
-    if name.startswith("telethon"):
-        return native_import("herokutl" + name[8:], *args, **kwargs)
-    elif name.startswith("hikkatl"):
-        return native_import("herokutl" + name[7:], *args, **kwargs)
-    elif name.startswith("hikkalls"):
-        return native_import(name, *args, **kwargs)
-    elif name.startswith("hikka"):
-        return native_import("heroku" + name[5:], *args, **kwargs)
+    match name:
+        case s if s.startswith("telethon"):
+            return native_import("herokutl" + name[8:], *args, **kwargs)
+        case s if s.startswith("hikkatl"):
+            return native_import("herokutl" + name[7:], *args, **kwargs)
+        case s if s.startswith("hikkalls"):
+            return native_import(name, *args, **kwargs)
+        case s if s.startswith("hikka"):
+            return native_import("heroku" + name[5:], *args, **kwargs)
 
     return native_import(name, *args, **kwargs)
 

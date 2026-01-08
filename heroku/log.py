@@ -75,29 +75,31 @@ linecache.getlines = getlines
 
 def override_text(exception: Exception) -> typing.Optional[str]:
     """Returns error-specific description if available, else `None`"""
-
-    if isinstance(exception, (TelegramNetworkError, asyncio.exceptions.TimeoutError)):
-        return "✈️ <b>You have problems with internet connection on your server.</b>"
-
-    if isinstance(exception, PersistentTimestampOutdatedError):
-        return "✈️ <b>Telegram has problems with their datacenters.</b>"
-
-    if isinstance(exception, CoreOverwriteError):
-        return f"⚠️ {str(exception)}"
-
-    if isinstance(exception, ServerError):
-        return "📡 <b>Telegram servers are currently experiencing issues. Please try again later.</b>"
-
-    if isinstance(exception, RPCError) and "TRANSLATION_TIMEOUT" in str(exception):
-        return ("🕓 <b>Telegram translation service timed out. Please try again later.</b>")
-
-    if isinstance(exception, ModuleNotFoundError):
-        return f"📦 {traceback.format_exception_only(type(exception), exception)[0].split(':')[1].strip()}"
     
-    if isinstance(exception, TelegramRetryAfter):
-        return f"✋ <b>Bot is hitting limits on {type(exception.method).__name__!r} method and got {exception.retry_after} seconds floodwait</b>"
+    match exception:
+        case TelegramNetworkError() | asyncio.exceptions.TimeoutError():
+            return "✈️ <b>You have problems with internet connection on your server.</b>"
+        
+        case PersistentTimestampOutdatedError():
+            return "✈️ <b>Telegram has problems with their datacenters.</b>"
 
-    return None
+        case CoreOverwriteError():
+            return f"⚠️ {str(exception)}"
+
+        case ServerError():
+            return "📡 <b>Telegram servers are currently experiencing issues. Please try again later.</b>"
+
+        case RPCError() if "TRANSLATION_TIMEOUT" in str(exception):
+            return "🕓 <b>Telegram translation service timed out. Please try again later.</b>"
+
+        case ModuleNotFoundError():
+            return f"📦 {traceback.format_exception_only(type(exception), exception)[0].split(':')[1].strip()}"
+        
+        case TelegramRetryAfter():
+            return f"✋ <b>Bot is hitting limits on {type(exception.method).__name__!r} method and got {exception.retry_after} seconds floodwait</b>"
+
+        case _:
+            return None
 
 
 class HerokuException:
@@ -126,26 +128,21 @@ class HerokuException:
         def to_hashable(dictionary: dict) -> dict:
             dictionary = dictionary.copy()
             for key, value in dictionary.items():
-                if isinstance(value, dict):
-                    dictionary[key] = to_hashable(value)
-                else:
-                    try:
-                        if (
-                            getattr(getattr(value, "__class__", None), "__name__", None)
-                            == "Database"
-                        ):
-                            dictionary[key] = "<Database>"
-                        elif isinstance(
-                            value,
-                            (herokutl.TelegramClient, CustomTelegramClient),
-                        ):
-                            dictionary[key] = f"<{value.__class__.__name__}>"
-                        elif len(str(value)) > 512:
-                            dictionary[key] = f"{str(value)[:512]}..."
-                        else:
-                            dictionary[key] = str(value)
-                    except Exception:
+                match value:
+                    case dict():
+                        dictionary[key] = to_hashable(value)
+                    case _ if getattr(getattr(value, "__class__", None), "__name__", None) == "Database":
+                        dictionary[key] = "<Database>"
+                    case herokutl.TelegramClient() | CustomTelegramClient():
                         dictionary[key] = f"<{value.__class__.__name__}>"
+                    case _:
+                        try:
+                            if len(str(value)) > 512:
+                                dictionary[key] = f"{str(value)[:512]}..."
+                            else:
+                                dictionary[key] = str(value)
+                        except Exception:
+                            dictionary[key] = f"<{value.__class__.__name__}>"
 
             return dictionary
 
@@ -401,16 +398,6 @@ class TelegramLogsHandler(logging.Handler):
                                 disable_notification=True,
                             )
                         )
-    # \*
-    # async def avoid_floodwait(self, exc):
-    #     try:
-    #         await exc
-    #     except TelegramRetryAfter as e:
-    #         await asyncio.sleep(e.retry_after)
-    #         await self.avoid_floodwait(exc)
-    #     except RuntimeError:
-    #         pass
-    # *\
 
     async def _exc_sender(self, *coros: Coroutine):
         for coro in coros:
