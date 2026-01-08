@@ -289,49 +289,50 @@ class HerokuInfoMod(loader.Module):
         start = time.perf_counter_ns()
         media = self.config["banner_url"]
         if self.config["banner_url"] and self.config["quote_media"] is True:
-            media = InputMediaWebPage(self.config["banner_url"], optional = True) 
-            try:
-                match True:
-                    case _ if self.config['switchInfo']:
-                        if self._get_info_photo(start) is None:
-                            await utils.answer(
-                                message, 
-                                self.strings["incorrect_img_format"]
-                            )
-                            return
+            media = InputMediaWebPage(self.config["banner_url"], optional = True)
 
+        try:
+            match True:
+                case _ if self.config['switchInfo']:
+                    if self._get_info_photo(start) is None:
                         await utils.answer(
-                            message,
-                            "",
-                            file = self._get_info_photo(start),
-                            reply_to=getattr(message, "reply_to_msg_id", None),
+                            message, 
+                            self.strings["incorrect_img_format"]
                         )
-                    case _ if self.config["custom_message"] is None:
-                        await utils.answer(
-                            message,
-                            self._render_info(start),
-                            file = media,
-                            reply_to=getattr(message, "reply_to_msg_id", None),
-                            invert_media = self.config["invert_media"],
-                        )
-                    case _:
-                        if '{ping}' in self.config["custom_message"]:
-                            message = await utils.answer(message, self.config["ping_emoji"])
-                        await utils.answer(
-                            message,
-                            self._render_info(start),
-                            file = media,
-                            reply_to=getattr(message, "reply_to_msg_id", None),
-                            invert_media = self.config["invert_media"],
-                        )
-            except WebpageMediaEmptyError:
-                await utils.answer(
-                    message,
-                    self.strings["no_banner"].format(
-                        link = self.config["banner_url"], 
-                    ),
-                    reply_to=getattr(message, "reply_to_msg_id", None),
-                )
+                        return
+
+                    await utils.answer(
+                        message,
+                        "",
+                        file = self._get_info_photo(start),
+                        reply_to=getattr(message, "reply_to_msg_id", None),
+                    )
+                case _ if self.config["custom_message"] is None:
+                    await utils.answer(
+                        message,
+                        self._render_info(start),
+                        file = media,
+                        reply_to=getattr(message, "reply_to_msg_id", None),
+                        invert_media = self.config["invert_media"],
+                    )
+                case _:
+                    if '{ping}' in self.config["custom_message"]:
+                        message = await utils.answer(message, self.config["ping_emoji"])
+                    await utils.answer(
+                        message,
+                        self._render_info(start),
+                        file = media,
+                        reply_to=getattr(message, "reply_to_msg_id", None),
+                        invert_media = self.config["invert_media"],
+                    )
+        except WebpageMediaEmptyError:
+            await utils.answer(
+                message,
+                self.strings["no_banner"].format(
+                    link = self.config["banner_url"], 
+                ),
+                reply_to=getattr(message, "reply_to_msg_id", None),
+            )
 
     @loader.command()
     async def ubinfo(self, message: Message):
