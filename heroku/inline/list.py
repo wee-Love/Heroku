@@ -257,15 +257,15 @@ class List(InlineUnit):
         page: typing.Union[int, str],
         unit_id: str = None,
     ):
-        if page == "close":
-            await self._delete_unit_message(call, unit_id=unit_id)
-            return
-
-        if self._units[unit_id]["current_index"] < 0 or page >= len(
-            self._units[unit_id]["strings"]
-        ):
-            await call.answer("Can't go to this page", show_alert=True)
-            return
+        match True:
+            case _ if page == "close":
+                await self._delete_unit_message(call, unit_id=unit_id)
+                return
+            case _ if self._units[unit_id]["current_index"] < 0 or page >= len(
+                self._units[unit_id]["strings"]
+            ):
+                await call.answer("Can't go to this page", show_alert=True)
+                return
 
         self._units[unit_id]["current_index"] = page
 

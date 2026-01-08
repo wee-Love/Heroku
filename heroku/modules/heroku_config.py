@@ -745,55 +745,53 @@ class HerokuConfigMod(loader.Module):
                     eng_art="n" if doc.lower().startswith(tuple("euioay")) else "",
                 )
             ]
-            if validator.internal_id == "Boolean":
-                await call.edit(
-                    self.strings(
-                        "configuring_option"
-                        if isinstance(obj_type, bool)
-                        else "configuring_option_lib"
-                    ).format(*args),
-                    reply_markup=additonal_button_row
-                    + self._generate_bool_markup(mod, config_opt, obj_type),
-                )
-                return
-
-            if validator.internal_id == "Series":
-                await call.edit(
-                    self.strings(
-                        "configuring_option"
-                        if isinstance(obj_type, bool)
-                        else "configuring_option_lib"
-                    ).format(*args),
-                    reply_markup=additonal_button_row
-                    + self._generate_series_markup(call, mod, config_opt, obj_type),
-                )
-                return
-
-            if validator.internal_id == "Choice":
-                await call.edit(
-                    self.strings(
-                        "configuring_option"
-                        if isinstance(obj_type, bool)
-                        else "configuring_option_lib"
-                    ).format(*args),
-                    reply_markup=additonal_button_row
-                    + self._generate_choice_markup(call, mod, config_opt, obj_type),
-                )
-                return
-
-            if validator.internal_id == "MultiChoice":
-                await call.edit(
-                    self.strings(
-                        "configuring_option"
-                        if isinstance(obj_type, bool)
-                        else "configuring_option_lib"
-                    ).format(*args),
-                    reply_markup=additonal_button_row
-                    + self._generate_multi_choice_markup(
-                        call, mod, config_opt, obj_type
-                    ),
-                )
-                return
+            match validator.internal_id:
+                case "Boolean":
+                    await call.edit(
+                        self.strings(
+                            "configuring_option"
+                            if isinstance(obj_type, bool)
+                            else "configuring_option_lib"
+                        ).format(*args),
+                        reply_markup=additonal_button_row
+                        + self._generate_bool_markup(mod, config_opt, obj_type),
+                    )
+                    return
+                case "Series":
+                    await call.edit(
+                        self.strings(
+                            "configuring_option"
+                            if isinstance(obj_type, bool)
+                            else "configuring_option_lib"
+                        ).format(*args),
+                        reply_markup=additonal_button_row
+                        + self._generate_series_markup(call, mod, config_opt, obj_type),
+                    )
+                    return
+                case "Choice":
+                    await call.edit(
+                        self.strings(
+                            "configuring_option"
+                            if isinstance(obj_type, bool)
+                            else "configuring_option_lib"
+                        ).format(*args),
+                        reply_markup=additonal_button_row
+                        + self._generate_choice_markup(call, mod, config_opt, obj_type),
+                    )
+                    return
+                case "MultiChoice":
+                    await call.edit(
+                        self.strings(
+                            "configuring_option"
+                            if isinstance(obj_type, bool)
+                            else "configuring_option_lib"
+                        ).format(*args),
+                        reply_markup=additonal_button_row
+                        + self._generate_multi_choice_markup(
+                            call, mod, config_opt, obj_type
+                        ),
+                    )
+                    return
             
         text = self.strings(
                 "configuring_option"

@@ -254,24 +254,25 @@ class RawMessageEditor(SudoMessageEditor):
     async def redraw(self):
         logger.debug(self.rc)
 
-        if self.rc is None:
-            text = (
-                "<code>"
-                + utils.escape_html(self.stdout[max(len(self.stdout) - 4095, 0) :])
-                + "</code>"
-            )
-        elif self.rc == 0:
-            text = (
-                "<code>"
-                + utils.escape_html(self.stdout[max(len(self.stdout) - 4090, 0) :])
-                + "</code>"
-            )
-        else:
-            text = (
-                "<code>"
-                + utils.escape_html(self.stderr[max(len(self.stderr) - 4095, 0) :])
-                + "</code>"
-            )
+        match self.rc:
+            case None:
+                text = (
+                    "<code>"
+                    + utils.escape_html(self.stdout[max(len(self.stdout) - 4095, 0) :])
+                    + "</code>"
+                )
+            case 0:
+                text = (
+                    "<code>"
+                    + utils.escape_html(self.stdout[max(len(self.stdout) - 4090, 0) :])
+                    + "</code>"
+                )
+            case _:
+                text = (
+                    "<code>"
+                    + utils.escape_html(self.stderr[max(len(self.stderr) - 4095, 0) :])
+                    + "</code>"
+                )
 
         if self.rc is not None and self.show_done:
             text += "\n" + self.strings("done")

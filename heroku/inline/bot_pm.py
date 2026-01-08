@@ -54,10 +54,11 @@ class BotPM(InlineUnit):
             )
             return False
 
-        if state:
-            self.fsm[str(user)] = state
-        elif str(user) in self.fsm:
-            del self.fsm[str(user)]
+        match True:
+            case _ if state:
+                self.fsm[str(user)] = state
+            case _ if str(user) in self.fsm:
+                del self.fsm[str(user)]
 
         return True
 

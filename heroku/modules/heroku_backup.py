@@ -240,24 +240,25 @@ class HerokuBackupMod(loader.Module):
         return txt
 
     async def convert(self, call: BotInlineCall, ans, file):
-        if ans == "y":
-            await utils.answer(
-                call,
-                self.strings["converting_db"]
-            )
-            backup = self._convert(file)
-            await utils.answer_file(
-                call,
-                backup,
-                caption=self.strings("backup_caption").format(
-                    prefix=utils.escape_html(self.get_prefix())
-                ),
-            )
-        else:
-            await utils.answer(
-                call,
-                self.strings["advice_converting"],
-                reply_markup=
+        match ans:
+            case "y":
+                await utils.answer(
+                    call,
+                    self.strings["converting_db"]
+                )
+                backup = self._convert(file)
+                await utils.answer_file(
+                    call,
+                    backup,
+                    caption=self.strings("backup_caption").format(
+                        prefix=utils.escape_html(self.get_prefix())
+                    ),
+                )
+            case _:
+                await utils.answer(
+                    call,
+                    self.strings["advice_converting"],
+                    reply_markup=
                     [
                         [
                             {

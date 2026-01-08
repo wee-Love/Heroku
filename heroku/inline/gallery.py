@@ -517,23 +517,21 @@ class Gallery(InlineUnit):
         page: typing.Union[int, str],
         unit_id: typing.Optional[str] = None,
     ):
-        if page == "slideshow":
-            await self._gallery_slideshow(call, unit_id)
-            return
-
-        if page == "close":
-            await self._delete_unit_message(call, unit_id=unit_id)
-            return
-
-        if page < 0:
-            await call.answer("No way back")
-            return
-
-        if page > len(self._units[unit_id]["photos"]) - 1 and isinstance(
-            self._units[unit_id]["next_handler"], ListGalleryHelper
-        ):
-            await call.answer("No way forward")
-            return
+        match True:
+            case _ if page == "slideshow":
+                await self._gallery_slideshow(call, unit_id)
+                return
+            case _ if page == "close":
+                await self._delete_unit_message(call, unit_id=unit_id)
+                return
+            case _ if page < 0:
+                await call.answer("No way back")
+                return
+            case _ if page > len(self._units[unit_id]["photos"]) - 1 and isinstance(
+                self._units[unit_id]["next_handler"], ListGalleryHelper
+            ):
+                await call.answer("No way forward")
+                return
 
         self._units[unit_id]["current_index"] = page
         if not isinstance(self._units[unit_id]["next_handler"], ListGalleryHelper):

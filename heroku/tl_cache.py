@@ -118,13 +118,14 @@ class CustomTelegramClient(TelegramClient):
                 "TelegramClient instance cannot be reused after logging out"
             )
 
-        if self._loop is None:
-            self._loop = helpers.get_running_loop()
-        elif self._loop != helpers.get_running_loop():
-            raise RuntimeError(
-                "The asyncio event loop must not change after connection (see the FAQ"
-                " for details)"
-            )
+        match True:
+            case _ if self._loop is None:
+                self._loop = helpers.get_running_loop()
+            case _ if self._loop != helpers.get_running_loop():
+                raise RuntimeError(
+                    "The asyncio event loop must not change after connection (see the FAQ"
+                    " for details)"
+                )
 
         connection = self._connection(
             self.session.server_address,

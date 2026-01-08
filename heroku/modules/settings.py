@@ -354,18 +354,19 @@ class CoreMod(loader.Module):
                 message.peer_id,
                 "https://raw.githubusercontent.com/coddrago/assets/refs/heads/main/heroku/heroku_installation.png",
                 caption=self.strings("vds_install"), reply_to=getattr(message, "reply_to_msg_id", None),)
-        elif "-vds" in args:
-            await utils.answer(message, self.strings("vds_install"))
-        elif "-wsl" in args:
-            await utils.answer(message, self.strings("wsl_install"))
-        elif "-ul" in args:
-            await utils.answer(message, self.strings("userland_install"))
-        elif "-jh" in args:
-            await utils.answer(message, self.strings("jamhost_install"))
-        elif "-hh" in args:
-            await utils.answer(message, self.strings("hikkahost_install"))
-        elif "-lh" in args:
-            await utils.answer(message, self.strings("lavhost_install"))
+        match True:
+            case _ if "-vds" in args:
+                await utils.answer(message, self.strings("vds_install"))
+            case _ if "-wsl" in args:
+                await utils.answer(message, self.strings("wsl_install"))
+            case _ if "-ul" in args:
+                await utils.answer(message, self.strings("userland_install"))
+            case _ if "-jh" in args:
+                await utils.answer(message, self.strings("jamhost_install"))
+            case _ if "-hh" in args:
+                await utils.answer(message, self.strings("hikkahost_install"))
+            case _ if "-lh" in args:
+                await utils.answer(message, self.strings("lavhost_install"))
 
     async def _inline__choose__installation(self, call: InlineCall, platform: str):
         with contextlib.suppress(Exception):

@@ -239,45 +239,46 @@ class HerokuInfoMod(loader.Module):
     @loader.command()
     async def insfont(self, message: Message):
         "<Url|Reply to font> - Install font"
-        if message.is_reply:
-            reply = await message.get_reply_message()
-            fontform = reply.document.mime_type.split("/")[1]
-            if not fontform in ['ttf', 'otf']:
-                await utils.answer(
-                    message,
-                    self.strings["incorrect_format_font"]
-                )
-                return
-            origpath = glob.glob(f'{os.getcwd()}/assets/font.*')[0]
-            ptf = f'{os.getcwd()}/font.{fontform}'
-            os.rename(origpath, ptf)
-            photo = await reply.download_media(origpath)
-            if photo is None:
-                os.rename(ptf, origpath)
+        match True:
+            case _ if message.is_reply:
+                reply = await message.get_reply_message()
+                fontform = reply.document.mime_type.split("/")[1]
+                if not fontform in ['ttf', 'otf']:
+                    await utils.answer(
+                        message,
+                        self.strings["incorrect_format_font"]
+                    )
+                    return
+                origpath = glob.glob(f'{os.getcwd()}/assets/font.*')[0]
+                ptf = f'{os.getcwd()}/font.{fontform}'
+                os.rename(origpath, ptf)
+                photo = await reply.download_media(origpath)
+                if photo is None:
+                    os.rename(ptf, origpath)
+                    await utils.answer(
+                        message,
+                        self.strings["no_font"]
+                    )
+                    return
+                os.remove(ptf)
+            case _ if utils.check_url(utils.get_args_raw(message)):
+                fontform = utils.get_args_raw(message).split('.')[-1]
+                if not fontform in ['ttf', 'otf']:
+                    await utils.answer(
+                        message,
+                        self.strings["incorrect_format_font"]
+                    )
+                    return
+                response = requests.get(utils.get_args_raw(message), stream=True)
+                os.remove(glob.glob(f'{os.getcwd()}/assets/font.*')[0])
+                with open(f'{os.getcwd()}/assets/font.{fontform}', 'wb') as file:
+                    file.write(response.content)
+            case _:
                 await utils.answer(
                     message,
                     self.strings["no_font"]
                 )
                 return
-            os.remove(ptf)
-        elif utils.check_url(utils.get_args_raw(message)):
-            fontform = utils.get_args_raw(message).split('.')[-1]
-            if not fontform in ['ttf', 'otf']:
-                await utils.answer(
-                    message,
-                    self.strings["incorrect_format_font"]
-                )
-                return
-            response = requests.get(utils.get_args_raw(message), stream=True)
-            os.remove(glob.glob(f'{os.getcwd()}/assets/font.*')[0])
-            with open(f'{os.getcwd()}/assets/font.{fontform}', 'wb') as file:
-                file.write(response.content)
-        else:
-            await utils.answer(
-                message,
-                self.strings["no_font"]
-            )
-            return
         await utils.answer(
             message,
             self.strings["font_installed"]
@@ -289,47 +290,48 @@ class HerokuInfoMod(loader.Module):
         media = self.config["banner_url"]
         if self.config["banner_url"] and self.config["quote_media"] is True:
             media = InputMediaWebPage(self.config["banner_url"], optional = True) 
-        try:
-            if self.config['switchInfo']:
-                if self._get_info_photo(start) is None:
-                    await utils.answer(
-                        message, 
-                        self.strings["incorrect_img_format"]
-                    )
-                    return
+            try:
+                match True:
+                    case _ if self.config['switchInfo']:
+                        if self._get_info_photo(start) is None:
+                            await utils.answer(
+                                message, 
+                                self.strings["incorrect_img_format"]
+                            )
+                            return
 
+                        await utils.answer(
+                            message,
+                            "",
+                            file = self._get_info_photo(start),
+                            reply_to=getattr(message, "reply_to_msg_id", None),
+                        )
+                    case _ if self.config["custom_message"] is None:
+                        await utils.answer(
+                            message,
+                            self._render_info(start),
+                            file = media,
+                            reply_to=getattr(message, "reply_to_msg_id", None),
+                            invert_media = self.config["invert_media"],
+                        )
+                    case _:
+                        if '{ping}' in self.config["custom_message"]:
+                            message = await utils.answer(message, self.config["ping_emoji"])
+                        await utils.answer(
+                            message,
+                            self._render_info(start),
+                            file = media,
+                            reply_to=getattr(message, "reply_to_msg_id", None),
+                            invert_media = self.config["invert_media"],
+                        )
+            except WebpageMediaEmptyError:
                 await utils.answer(
                     message,
-                    "",
-                    file = self._get_info_photo(start),
+                    self.strings["no_banner"].format(
+                        link = self.config["banner_url"], 
+                    ),
                     reply_to=getattr(message, "reply_to_msg_id", None),
                 )
-            elif self.config["custom_message"] is None:
-                await utils.answer(
-                    message,
-                    self._render_info(start),
-                    file = media,
-                    reply_to=getattr(message, "reply_to_msg_id", None),
-                    invert_media = self.config["invert_media"],
-                )
-            else:
-                if '{ping}' in self.config["custom_message"]:
-                    message = await utils.answer(message, self.config["ping_emoji"])
-                await utils.answer(
-                    message,
-                    self._render_info(start),
-                    file = media,
-                    reply_to=getattr(message, "reply_to_msg_id", None),
-                    invert_media = self.config["invert_media"],
-                )
-        except WebpageMediaEmptyError:
-            await utils.answer(
-                message,
-                self.strings["no_banner"].format(
-                    link = self.config["banner_url"], 
-                ),
-                reply_to=getattr(message, "reply_to_msg_id", None),
-            )
 
     @loader.command()
     async def ubinfo(self, message: Message):

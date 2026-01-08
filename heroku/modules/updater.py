@@ -121,15 +121,18 @@ class UpdaterMod(loader.Module):
                     headers={"Accept": "application/vnd.github.v3.raw"}
                 )
 
-                if r.status == 200:
-                    announcement = (await r.text()).strip()
-                    previous = self.get("announcement", "")
-                    if announcement and announcement != previous:
-                        await self.inline.bot.send_message(
-                            self.tg_id,
-                            self.strings("announcement").format(announcement)
-                        )
-                        self.set("announcement", announcement)
+                match r.status:
+                    case 200:
+                        announcement = (await r.text()).strip()
+                        previous = self.get("announcement", "")
+                        if announcement and announcement != previous:
+                            await self.inline.bot.send_message(
+                                self.tg_id,
+                                self.strings("announcement").format(announcement)
+                            )
+                            self.set("announcement", announcement)
+                    case _:
+                        pass
             except Exception:
                 pass
             

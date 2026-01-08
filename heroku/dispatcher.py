@@ -306,14 +306,15 @@ class CommandDispatcher:
                 )
             return False
 
-        if (
-            event.message.message.startswith(str.translate(prefix, change))
-            and str.translate(prefix, change) != prefix
-        ):
-            message.message = str.translate(message.message, change)
-            message.text = str.translate(message.text, change)
-        elif not event.message.message.startswith(prefix):
-            return False
+        match True:
+            case _ if (
+                event.message.message.startswith(str.translate(prefix, change))
+                and str.translate(prefix, change) != prefix
+            ):
+                message.message = str.translate(message.message, change)
+                message.text = str.translate(message.text, change)
+            case _ if not event.message.message.startswith(prefix):
+                return False
 
         if (
             event.sticker

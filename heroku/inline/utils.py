@@ -454,30 +454,45 @@ class Utils(InlineUnit):
         if isinstance(media, io.BytesIO):
             media = InputFile(filename=media)
 
-        if file:
-            media = InputMediaDocument(media=media, caption=text, parse_mode="HTML")
-        elif photo:
-            media = InputMediaPhoto(media=media, caption=text, parse_mode="HTML")
-        elif audio:
-            if isinstance(audio, dict):
-                media = InputMediaAudio(
-                    media=audio["url"],
-                    title=audio.get("title"),
-                    performer=audio.get("performer"),
-                    duration=audio.get("duration"),
-                    caption=text,
-                    parse_mode="HTML",
-                )
-            else:
-                media = InputMediaAudio(
-                    media=audio,
-                    caption=text,
-                    parse_mode="HTML",
-                )
-        elif video:
-            media = InputMediaVideo(media=media, caption=text, parse_mode="HTML")
-        elif gif:
-            media = InputMediaAnimation(media=media, caption=text, parse_mode="HTML")
+        kind = (
+            "file"
+            if file
+            else "photo"
+            if photo
+            else "audio"
+            if audio
+            else "video"
+            if video
+            else "gif"
+            if gif
+            else None
+        )
+
+        match kind:
+            case "file":
+                media = InputMediaDocument(media=media, caption=text, parse_mode="HTML")
+            case "photo":
+                media = InputMediaPhoto(media=media, caption=text, parse_mode="HTML")
+            case "audio":
+                if isinstance(audio, dict):
+                    media = InputMediaAudio(
+                        media=audio["url"],
+                        title=audio.get("title"),
+                        performer=audio.get("performer"),
+                        duration=audio.get("duration"),
+                        caption=text,
+                        parse_mode="HTML",
+                    )
+                else:
+                    media = InputMediaAudio(
+                        media=audio,
+                        caption=text,
+                        parse_mode="HTML",
+                    )
+            case "video":
+                media = InputMediaVideo(media=media, caption=text, parse_mode="HTML")
+            case "gif":
+                media = InputMediaAnimation(media=media, caption=text, parse_mode="HTML")
 
         if media is None and text is None and reply_markup:
             try:

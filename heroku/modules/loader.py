@@ -186,41 +186,42 @@ class LoaderMod(loader.Module):
     @loader.command(alias = "dlm")
     async def dlmod(self, message: Message, force_pm: bool = False):
         if args := utils.get_args(message):
-            if len(args) == 1:
-                args = args[0]
-
-                await utils.answer(
-                    message, self.strings("finding_module_in_repos")
-                )
-                if (
-                    await self.download_and_install(args, message, force_pm)
-                    == MODULE_LOADING_FORBIDDEN
-                ):
-                    return
-
-                if self.fully_loaded:
-                    self.update_modules_in_db()
-            else:
-                not_installed = []
-
-                await utils.answer(
-                    message, "Installing {} modules...".format(len(args))
-                )
-
-                for arg in args:
-                    result = await self.download_and_install(arg)
-                    
-                    if result == MODULE_LOADING_FAILED:
-                        not_installed.append(arg)
-                await utils.answer(
-                    message, "{} modules was installed.\n\nModules <code>{}</code> cannot be installed because they are not available in the repo".format(
-                        len(args) - len(not_installed),
-                        "</code>, <code>".join(not_installed)
+            match args:
+                case [single]:
+                    args = single
+                    await utils.answer(
+                        message, self.strings("finding_module_in_repos")
                     )
-                )
+                    if (
+                        await self.download_and_install(args, message, force_pm)
+                        == MODULE_LOADING_FORBIDDEN
+                    ):
+                        return
 
-                if self.fully_loaded:
-                    self.update_modules_in_db()
+                    if self.fully_loaded:
+                        self.update_modules_in_db()
+                case _:
+                    not_installed = []
+
+                    await utils.answer(
+                        message, "Installing {} modules...".format(len(args))
+                    )
+
+                    for arg in args:
+                        result = await self.download_and_install(arg)
+
+                        if result == MODULE_LOADING_FAILED:
+                            not_installed.append(arg)
+                    await utils.answer(
+                        message,
+                        "{} modules was installed.\n\nModules <code>{}</code> cannot be installed because they are not available in the repo".format(
+                            len(args) - len(not_installed),
+                            "</code>, <code>".join(not_installed),
+                        ),
+                    )
+
+                    if self.fully_loaded:
+                        self.update_modules_in_db()
         else:
             await self.inline.list(
                 message,

@@ -101,12 +101,13 @@ def merge(a: dict, b: dict, /) -> dict:
     """
     for key in a:
         if key in b:
-            if isinstance(a[key], dict) and isinstance(b[key], dict):
-                b[key] = merge(a[key], b[key])
-            elif isinstance(a[key], list) and isinstance(b[key], list):
-                b[key] = list(set(b[key] + a[key]))
-            else:
-                b[key] = a[key]
+            match True:
+                case _ if isinstance(a[key], dict) and isinstance(b[key], dict):
+                    b[key] = merge(a[key], b[key])
+                case _ if isinstance(a[key], list) and isinstance(b[key], list):
+                    b[key] = list(set(b[key] + a[key]))
+                case _:
+                    b[key] = a[key]
 
         b[key] = a[key]
 

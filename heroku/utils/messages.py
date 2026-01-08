@@ -189,62 +189,58 @@ def smart_split(
         pending_entities = []
 
         for entity in entities:
-            if (
-                entity.offset < split_offset_utf16
-                and entity.offset + entity.length > split_offset_utf16 + exclude
-            ):
-                # spans boundary
-                current_entities.append(
-                    _copy_tl(
-                        entity,
-                        length=split_offset_utf16 - entity.offset,
+            match True:
+                case _ if (
+                    entity.offset < split_offset_utf16
+                    and entity.offset + entity.length > split_offset_utf16 + exclude
+                ):
+                    current_entities.append(
+                        _copy_tl(
+                            entity,
+                            length=split_offset_utf16 - entity.offset,
+                        )
                     )
-                )
-                pending_entities.append(
-                    _copy_tl(
-                        entity,
-                        offset=0,
-                        length=entity.offset
-                        + entity.length
-                        - split_offset_utf16
-                        - exclude,
+                    pending_entities.append(
+                        _copy_tl(
+                            entity,
+                            offset=0,
+                            length=entity.offset
+                            + entity.length
+                            - split_offset_utf16
+                            - exclude,
+                        )
                     )
-                )
-            elif entity.offset < split_offset_utf16 < entity.offset + entity.length:
-                # overlaps boundary
-                current_entities.append(
-                    _copy_tl(
-                        entity,
-                        length=split_offset_utf16 - entity.offset,
+                case _ if entity.offset < split_offset_utf16 < entity.offset + entity.length:
+                    current_entities.append(
+                        _copy_tl(
+                            entity,
+                            length=split_offset_utf16 - entity.offset,
+                        )
                     )
-                )
-            elif entity.offset < split_offset_utf16:
-                # wholly left
-                current_entities.append(entity)
-            elif (
-                entity.offset + entity.length
-                > split_offset_utf16 + exclude
-                > entity.offset
-            ):
-                # overlaps right boundary
-                pending_entities.append(
-                    _copy_tl(
-                        entity,
-                        offset=0,
-                        length=entity.offset
-                        + entity.length
-                        - split_offset_utf16
-                        - exclude,
+                case _ if entity.offset < split_offset_utf16:
+                    current_entities.append(entity)
+                case _ if (
+                    entity.offset + entity.length
+                    > split_offset_utf16 + exclude
+                    > entity.offset
+                ):
+                    pending_entities.append(
+                        _copy_tl(
+                            entity,
+                            offset=0,
+                            length=entity.offset
+                            + entity.length
+                            - split_offset_utf16
+                            - exclude,
+                        )
                     )
-                )
-            elif entity.offset + entity.length > split_offset_utf16 + exclude:
-                # wholly right
-                pending_entities.append(
-                    _copy_tl(
-                        entity,
-                        offset=entity.offset - split_offset_utf16 - exclude,
+                case _ if entity.offset + entity.length > split_offset_utf16 + exclude:
+                    pending_entities.append(
+                        _copy_tl(
+                            entity,
+                            offset=entity.offset - split_offset_utf16 - exclude,
+                        )
                     )
-                )
 
         current_text = text[text_offset:split_index]
         yield parser.unparse(
@@ -330,13 +326,15 @@ async def answer(
 
     kwargs.setdefault("link_preview", False)
 
-    if not (edit := (message.out and not message.via_bot_id and not message.fwd_from)):
-        kwargs.setdefault(
-            "reply_to",
-            getattr(message, "reply_to_msg_id", None),
-        )
-    elif "reply_to" in kwargs:
-        kwargs.pop("reply_to")
+    edit = (message.out and not message.via_bot_id and not message.fwd_from)
+    match True:
+        case _ if not edit:
+            kwargs.setdefault(
+                "reply_to",
+                getattr(message, "reply_to_msg_id", None),
+            )
+        case _ if "reply_to" in kwargs:
+            kwargs.pop("reply_to")
 
     parse_mode = herokutl.utils.sanitize_parse_mode(
         kwargs.pop(
