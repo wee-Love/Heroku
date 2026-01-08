@@ -31,6 +31,9 @@
 - add meme lang packs
 - add UwU language to meme pack
 - add leet(1337) to meme pack
+- add tiktokkid to meme pack
+- remove support python 3.9
+- rework if else to match/case
 
 ## 🪐 Heroku 1.7.2
 - added autoupdate
