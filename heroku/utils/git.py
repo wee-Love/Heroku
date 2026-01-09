@@ -6,6 +6,7 @@
 
 import logging
 import typing
+import asyncio
 
 import git
 import herokutl
@@ -44,5 +45,32 @@ def get_commit_url() -> str:
     try:
         hash_ = get_git_hash()
         return f'<a href="https://github.com/coddrago/Heroku/commit/{hash_}">#{hash_[:7]}</a>'
+    except Exception:
+        return "Unknown"
+
+async def get_git_status() -> str:
+    """
+    :return: 'Clean' or 'X files modified'.
+    """
+    try:
+        process = await asyncio.create_subprocess_shell(
+            "git status --porcelain",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        stdout, _ = await process.communicate()
+
+        if process.returncode != 0:
+            return "Not a Git repo"
+
+        output = stdout.decode().strip()
+
+        if not output:
+            return "Clean"
+        
+        count = len(output.splitlines())
+        word = "file" if count == 1 else "files"
+        return f"{count} {word} modified"
+
     except Exception:
         return "Unknown"
